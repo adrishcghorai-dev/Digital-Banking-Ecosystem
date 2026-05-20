@@ -10,6 +10,14 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-prod")
 CORS(app)
 
+# ── Register ML Blueprint ─────────────────────────────────────────────────────
+try:
+    from ml.ml_api import ml_bp
+    app.register_blueprint(ml_bp)
+    print("[ML] Blueprint registered – endpoints: /api/ml/analyze, /api/ml/retrain, /api/ml/status")
+except ImportError as e:
+    print(f"[ML] Could not load ML module (run 'pip install -r requirements.txt'): {e}")
+
 BASE = os.path.dirname(__file__)
 LOG_FILE      = os.path.join(BASE, "logs", "captured.csv")
 BEHAVIOR_FILE = os.path.join(BASE, "logs", "behavior.json")
@@ -296,15 +304,33 @@ def track_batch():
         if kicked:
             return jsonify({"status": "ok", "received": 0, "kicked": True})
         records = read_behavior()
+        ml_scores = []
         for item in items:
             item["server_timestamp"] = datetime.datetime.utcnow().isoformat()
             item["ip_address"] = ip
             item["user_agent"] = ua
             item["session_id"] = sid
             records.append(item)
+            # ── Auto-score with ML (non-blocking) ─────────────────────
+            try:
+                from ml.models import RiskScorer
+                scorer = RiskScorer()
+                scorer.load_models()
+                result = scorer.score(item)
+                ml_scores.append({
+                    "risk_score": result["risk_score"],
+                    "risk_level": result["risk_level"],
+                    "is_bot": result["details"]["bot_detection"]["is_bot"],
+                })
+                print(f"\\n[ML Analysis] Session: {sid[:8]}... | Risk Score: {result['risk_score']} ({result['risk_level'].upper()}) | Bot: {result['details']['bot_detection']['is_bot']}")
+            except Exception:
+                pass  # ML not trained yet or import error – silently skip
         with open(BEHAVIOR_FILE, "w") as f:
             json.dump(records, f, indent=2)
-        return jsonify({"status": "ok", "received": len(items)})
+        response = {"status": "ok", "received": len(items)}
+        if ml_scores:
+            response["ml_analysis"] = ml_scores
+        return jsonify(response)
     except Exception as e:
         return jsonify({"status": "error", "detail": str(e)}), 500
 

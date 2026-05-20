@@ -14,5 +14,21 @@
     "zip_code": "10001",
     "account_type": "personal",
     "ip_address": "127.0.0.1"
+  },
+  "anshulk02101": {
+    "username": "anshulk02101",
+    "password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "created_at": "2026-05-20T15:17:14.709780",
+    "full_name": "Anshul Kumar",
+    "email": "anshulk02101@gmail.com",
+    "phone": "+916387342868",
+    "dob": "2007-05-01",
+    "ssn_last4": "0000",
+    "address": "Kanpur",
+    "city": "kanpur",
+    "state": "GA",
+    "zip_code": "209736",
+    "account_type": "personal",
+    "ip_address": "192.168.31.35"
   }
 }
