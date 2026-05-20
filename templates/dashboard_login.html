@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureBank — Researcher Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="dark-bg">
+  <main class="single-center">
+    <div class="login-card dash-login-card">
+      <div class="dash-lock-icon">
+        <svg viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="22" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+          <rect x="14" y="22" width="20" height="14" rx="2" fill="#1e293b" stroke="#475569" stroke-width="1.2"/>
+          <path d="M18 22V18a6 6 0 0112 0v4" stroke="#f5c518" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="24" cy="29" r="2" fill="#f5c518"/>
+        </svg>
+      </div>
+      <div class="login-header">
+        <h2 style="color:#f1f5f9;">Researcher Access</h2>
+        <p style="color:#94a3b8;">Enter the admin token to access the capture dashboard.</p>
+      </div>
+      {% if error %}
+      <div class="alert-error">{{ error }}</div>
+      {% endif %}
+      <form class="login-form" method="POST" action="/dashboard">
+        <div class="field-group dark-field">
+          <label style="color:#94a3b8;">Admin Token</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 20 20" fill="none"><path d="M5 9V7a5 5 0 0110 0v2M4 9h12a1 1 0 011 1v7a1 1 0 01-1 1H4a1 1 0 01-1-1v-7a1 1 0 011-1z" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <input type="password" name="token" placeholder="Enter access token" style="background:#1e293b;color:#f1f5f9;border-color:#334155;" />
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">Access Dashboard</button>
+      </form>
+      <div class="login-footer" style="margin-top:1.5rem;">
+        <p style="color:#475569;font-size:0.8rem;text-align:center;">For authorized security researchers only. All access is logged.</p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureBank — Verify Identity</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 40 40" fill="none">
+          <rect width="40" height="40" rx="8" fill="#1a3a5c"/>
+          <path d="M20 8L32 14V16H8V14L20 8Z" fill="#f5c518"/>
+          <rect x="10" y="18" width="4" height="10" fill="white" opacity="0.9"/>
+          <rect x="18" y="18" width="4" height="10" fill="white" opacity="0.9"/>
+          <rect x="26" y="18" width="4" height="10" fill="white" opacity="0.9"/>
+          <rect x="8" y="29" width="24" height="3" fill="#f5c518"/>
+        </svg>
+        <span class="brand-name">SecureBank</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="single-center">
+    <div class="login-card verify-card">
+      <div class="verify-icon">
+        <svg viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="30" stroke="#1a3a5c" stroke-width="2"/>
+          <rect x="20" y="28" width="24" height="18" rx="3" stroke="#1a3a5c" stroke-width="2"/>
+          <path d="M24 28V22a8 8 0 0116 0v6" stroke="#1a3a5c" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="32" cy="37" r="2" fill="#1a3a5c"/>
+        </svg>
+      </div>
+
+      <div class="login-header">
+        <h2>Two-Factor Verification</h2>
+        <p>We sent a 6-digit code to your registered mobile number ending in <strong>••••7823</strong>. Enter it below to continue.</p>
+      </div>
+
+      <form class="login-form" method="POST" action="/verify">
+        <div class="field-group">
+          <label for="otp">One-Time Password (OTP)</label>
+          <div class="otp-inputs">
+            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp1" />
+            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp2" />
+            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp3" />
+            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp4" />
+            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp5" />
+            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp6" />
+          </div>
+          <input type="hidden" name="otp" id="otp-combined" />
+        </div>
+
+        <div class="otp-timer">
+          Code expires in <strong id="countdown">05:00</strong>
+        </div>
+
+        <button type="submit" class="btn-primary" onclick="combineOtp()">
+          Verify & Sign In
+        </button>
+
+        <div class="otp-actions">
+          <button type="button" class="link-btn">Resend code via SMS</button>
+          <span class="dot-sep">·</span>
+          <button type="button" class="link-btn">Use backup code</button>
+        </div>
+      </form>
+
+      <div class="login-footer">
+        <div class="security-notice">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 1L2 3.5V8c0 3.3 2.5 6.4 6 7 3.5-.6 6-3.7 6-7V3.5L8 1z" stroke="#16a34a" stroke-width="1.2" stroke-linejoin="round"/><path d="M5.5 8l2 2 3-3" stroke="#16a34a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          SecureBank will never ask for your full OTP over phone or email
+        </div>
+        <p class="register-prompt"><a href="/login">Back to sign in</a></p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Auto-focus and advance OTP boxes
+    const boxes = document.querySelectorAll('.otp-box');
+    boxes.forEach((box, i) => {
+      box.addEventListener('input', () => {
+        if (box.value.length === 1 && i < boxes.length - 1) boxes[i+1].focus();
+      });
+      box.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && box.value === '' && i > 0) boxes[i-1].focus();
+      });
+    });
+
+    function combineOtp() {
+      document.getElementById('otp-combined').value = Array.from(boxes).map(b => b.value).join('');
+    }
+
+    // Countdown timer
+    let secs = 300;
+    const cd = document.getElementById('countdown');
+    const interval = setInterval(() => {
+      secs--;
+      if (secs <= 0) { clearInterval(interval); cd.textContent = 'Expired'; return; }
+      const m = String(Math.floor(secs/60)).padStart(2,'0');
+      const s = String(secs%60).padStart(2,'0');
+      cd.textContent = `${m}:${s}`;
+    }, 1000);
+  </script>
+</body>
+</html>

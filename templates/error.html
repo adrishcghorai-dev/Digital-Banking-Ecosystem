@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureBank — Session Error</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 40 40" fill="none">
+          <rect width="40" height="40" rx="8" fill="#1a3a5c"/>
+          <path d="M20 8L32 14V16H8V14L20 8Z" fill="#f5c518"/>
+          <rect x="10" y="18" width="4" height="10" fill="white" opacity="0.9"/>
+          <rect x="18" y="18" width="4" height="10" fill="white" opacity="0.9"/>
+          <rect x="26" y="18" width="4" height="10" fill="white" opacity="0.9"/>
+          <rect x="8" y="29" width="24" height="3" fill="#f5c518"/>
+        </svg>
+        <span class="brand-name">SecureBank</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="single-center">
+    <div class="login-card verify-card">
+      <div class="verify-icon error-icon">
+        <svg viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="30" stroke="#dc2626" stroke-width="2"/>
+          <path d="M22 22l20 20M42 22L22 42" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="login-header">
+        <h2>Authentication Failed</h2>
+        <p>We could not verify your identity. This may be due to an incorrect OTP, expired session, or suspicious activity detected on your account.</p>
+      </div>
+      <div class="error-detail">
+        <div class="error-row">
+          <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#dc2626" stroke-width="1.2"/><path d="M8 5v3M8 11h.01" stroke="#dc2626" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Your account has been temporarily locked for security.
+        </div>
+        <div class="error-row">
+          <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#dc2626" stroke-width="1.2"/><path d="M8 5v3M8 11h.01" stroke="#dc2626" stroke-width="1.2" stroke-linecap="round"/></svg>
+          If this was not you, please contact us immediately at <strong>1-800-SECURE-1</strong>.
+        </div>
+      </div>
+      <a href="/login" class="btn-primary" style="display:flex;text-decoration:none;">Try Again</a>
+      <div class="login-footer" style="margin-top:1.5rem;">
+        <p class="register-prompt">Need help? <a href="#">Contact Support</a> &nbsp;|&nbsp; <a href="#">Report Fraud</a></p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "adr_19": {
+    "username": "ADR_19",
+    "password_hash": "5a8cdf66a1bb552c50153d92443e4c97babf13813ade2928b7e224f29841c6bd",
+    "created_at": "2026-05-20T10:00:08.660418",
+    "full_name": "Adrish Ghorai",
+    "email": "adrish.c.ghorai@gmail.com",
+    "phone": "8528034171",
+    "dob": "2007-04-19",
+    "ssn_last4": "1234",
+    "address": "House no. 3027 type3 iitk",
+    "city": "Kanpur",
+    "state": "IL",
+    "zip_code": "10001",
+    "account_type": "personal",
+    "ip_address": "127.0.0.1"
+  }
+}
