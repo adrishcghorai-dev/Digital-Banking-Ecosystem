@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureBank — My Account</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ── Top nav ── -->
+<header class="app-nav">
+  <div class="app-nav-inner">
+    <div class="brand">
+      <svg class="brand-icon" viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" rx="8" fill="#1a3a5c"/>
+        <path d="M20 8L32 14V16H8V14L20 8Z" fill="#f5c518"/>
+        <rect x="10" y="18" width="4" height="10" fill="white" opacity="0.9"/>
+        <rect x="18" y="18" width="4" height="10" fill="white" opacity="0.9"/>
+        <rect x="26" y="18" width="4" height="10" fill="white" opacity="0.9"/>
+        <rect x="8" y="29" width="24" height="3" fill="#f5c518"/>
+      </svg>
+      <span class="brand-name">SecureBank</span>
+    </div>
+    <nav class="app-nav-links">
+      <a href="#" class="nav-link active">Dashboard</a>
+      <a href="#" class="nav-link">Accounts</a>
+      <a href="#" class="nav-link">Payments</a>
+      <a href="#" class="nav-link">Cards</a>
+      <a href="#" class="nav-link">Investments</a>
+      <a href="#" class="nav-link">Support</a>
+    </nav>
+    <div class="app-nav-right">
+      <button class="icon-btn" title="Notifications">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M10 2a6 6 0 00-6 6v3l-1.5 2.5h15L16 11V8a6 6 0 00-6-6zM8 16a2 2 0 004 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <div class="user-pill">
+        <div class="avatar">{{ username[0].upper() }}</div>
+        <span>{{ username }}</span>
+        <svg viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── Main ── -->
+<main class="app-main">
+
+  <!-- Greeting -->
+  <section class="greeting-bar">
+    <div>
+      <p class="greeting-label">Good morning,</p>
+      <h1 class="greeting-name">{{ username }} 👋</h1>
+    </div>
+    <div class="greeting-meta">
+      <span class="last-login">Last login: Today, 09:14 AM · Chrome · New York, US</span>
+      <span class="security-ok">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M8 1L2 3.5V8c0 3.3 2.5 6.4 6 7 3.5-.6 6-3.7 6-7V3.5L8 1z" stroke="#16a34a" stroke-width="1.2"/><path d="M5.5 8l2 2 3-3" stroke="#16a34a" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Account secured
+      </span>
+    </div>
+  </section>
+
+  <!-- Balance cards row -->
+  <section class="accounts-row">
+
+    <div class="account-card primary-card" data-track="account-checking">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Checking Account</div>
+          <div class="card-number">••••  ••••  ••••  4821</div>
+        </div>
+        <div class="card-badge">Primary</div>
+      </div>
+      <div class="card-balance">
+        <span class="balance-amount">$24,830<span class="balance-cents">.57</span></span>
+        <span class="balance-change up">▲ +$1,240 this month</span>
+      </div>
+      <div class="card-footer">
+        <span>Available: <strong>$22,100.00</strong></span>
+        <span>Routing: 021000021</span>
+      </div>
+    </div>
+
+    <div class="account-card savings-card" data-track="account-savings">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Savings Account</div>
+          <div class="card-number">••••  ••••  ••••  9304</div>
+        </div>
+        <div class="card-badge">3.8% APY</div>
+      </div>
+      <div class="card-balance">
+        <span class="balance-amount">$68,412<span class="balance-cents">.00</span></span>
+        <span class="balance-change up">▲ +$218.50 interest</span>
+      </div>
+      <div class="card-footer">
+        <span>Monthly limit: $6 withdrawals</span>
+        <span>Used: 1/6</span>
+      </div>
+    </div>
+
+    <div class="account-card credit-card" data-track="account-credit">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Credit Card</div>
+          <div class="card-number">••••  ••••  ••••  7712</div>
+        </div>
+        <div class="card-badge warn">Due in 8 days</div>
+      </div>
+      <div class="card-balance">
+        <span class="balance-amount">$3,240<span class="balance-cents">.18</span></span>
+        <span class="balance-change down">▼ Balance owed</span>
+      </div>
+      <div class="card-footer">
+        <span>Limit: $15,000</span>
+        <span>Min payment: $65.00</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Quick actions -->
+  <section class="quick-actions-section">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="quick-actions-grid">
+
+      <button class="qa-btn" data-track="btn-send-money" onclick="fakeAction(this,'Initiating transfer…')">
+        <div class="qa-icon qa-blue">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span>Send Money</span>
+      </button>
+
+      <button class="qa-btn" data-track="btn-pay-bills" onclick="fakeAction(this,'Opening bill pay…')">
+        <div class="qa-icon qa-green">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 15h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <span>Pay Bills</span>
+      </button>
+
+      <button class="qa-btn" data-track="btn-transfer" onclick="fakeAction(this,'Loading transfers…')">
+        <div class="qa-icon qa-purple">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M7 16l-4-4 4-4M17 8l4 4-4 4M14 5l-4 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span>Transfer</span>
+      </button>
+
+      <button class="qa-btn" data-track="btn-request" onclick="fakeAction(this,'Opening request form…')">
+        <div class="qa-icon qa-orange">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span>Request Money</span>
+      </button>
+
+      <button class="qa-btn" data-track="btn-mobile-deposit" onclick="fakeAction(this,'Opening camera…')">
+        <div class="qa-icon qa-teal">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="13" r="3" stroke="currentColor" stroke-width="2"/><path d="M8 6V5a2 2 0 012-2h4a2 2 0 012 2v1" stroke="currentColor" stroke-width="2"/></svg>
+        </div>
+        <span>Mobile Deposit</span>
+      </button>
+
+      <button class="qa-btn" data-track="btn-atm" onclick="fakeAction(this,'Finding ATMs…')">
+        <div class="qa-icon qa-navy">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="2"/><rect x="7" y="7" width="10" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M7 15h4M7 18h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <span>Find ATM</span>
+      </button>
+
+      <button class="qa-btn" data-track="btn-wire" onclick="fakeAction(this,'Loading wire transfer…')">
+        <div class="qa-icon qa-red">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <span>Wire Transfer</span>
+      </button>
+
+      <button class="qa-btn" data-track="btn-invest" onclick="fakeAction(this,'Loading investments…')">
+        <div class="qa-icon qa-gold">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 17l4-6 4 3 4-7 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span>Invest</span>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- Content grid: transactions + spending -->
+  <div class="content-grid">
+
+    <!-- Recent transactions -->
+    <section class="transactions-section">
+      <div class="section-header">
+        <h2 class="section-title">Recent Transactions</h2>
+        <a href="#" class="see-all" data-track="link-all-transactions">See all</a>
+      </div>
+      <div class="txn-list">
+
+        <div class="txn-item" data-track="txn-netflix">
+          <div class="txn-icon txn-sub"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4z" stroke="currentColor" stroke-width="1.5" rx="2"/><path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <div class="txn-info"><div class="txn-name">Netflix Subscription</div><div class="txn-meta">May 18 · Streaming · Checking</div></div>
+          <div class="txn-amount negative">-$15.99</div>
+        </div>
+
+        <div class="txn-item" data-track="txn-payroll">
+          <div class="txn-icon txn-income"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 7H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="txn-info"><div class="txn-name">Direct Deposit — Payroll</div><div class="txn-meta">May 17 · Income · Checking</div></div>
+          <div class="txn-amount positive">+$4,250.00</div>
+        </div>
+
+        <div class="txn-item" data-track="txn-amazon">
+          <div class="txn-icon txn-shop"><svg viewBox="0 0 24 24" fill="none"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="txn-info"><div class="txn-name">Amazon.com</div><div class="txn-meta">May 16 · Shopping · Credit Card</div></div>
+          <div class="txn-amount negative">-$89.47</div>
+        </div>
+
+        <div class="txn-item" data-track="txn-starbucks">
+          <div class="txn-icon txn-food"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="txn-info"><div class="txn-name">Starbucks #4892</div><div class="txn-meta">May 16 · Food & Drink · Debit</div></div>
+          <div class="txn-amount negative">-$7.25</div>
+        </div>
+
+        <div class="txn-item" data-track="txn-transfer">
+          <div class="txn-icon txn-transfer-i"><svg viewBox="0 0 24 24" fill="none"><path d="M7 16l-4-4 4-4M17 8l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="txn-info"><div class="txn-name">Transfer to Savings</div><div class="txn-meta">May 15 · Internal Transfer</div></div>
+          <div class="txn-amount negative">-$500.00</div>
+        </div>
+
+        <div class="txn-item" data-track="txn-uber">
+          <div class="txn-icon txn-travel"><svg viewBox="0 0 24 24" fill="none"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v5M14 17a3 3 0 11-6 0 3 3 0 016 0zm7 0a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="txn-info"><div class="txn-name">Uber</div><div class="txn-meta">May 15 · Transport · Debit</div></div>
+          <div class="txn-amount negative">-$22.80</div>
+        </div>
+
+        <div class="txn-item" data-track="txn-zelle">
+          <div class="txn-icon txn-income"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 7H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="txn-info"><div class="txn-name">Zelle — from Alex M.</div><div class="txn-meta">May 14 · Received · Checking</div></div>
+          <div class="txn-amount positive">+$120.00</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Spending insight + payment form -->
+    <div class="right-column">
+
+      <!-- Spending summary -->
+      <section class="spending-card">
+        <h2 class="section-title">May Spending</h2>
+        <div class="spending-donut-wrapper">
+          <div class="donut-chart">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#1e293b" stroke-width="18"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#2563eb" stroke-width="18" stroke-dasharray="126 188" stroke-dashoffset="0" stroke-linecap="butt"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#16a34a" stroke-width="18" stroke-dasharray="63 251" stroke-dashoffset="-126" stroke-linecap="butt"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#f5c518" stroke-width="18" stroke-dasharray="47 267" stroke-dashoffset="-189" stroke-linecap="butt"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#dc2626" stroke-width="18" stroke-dasharray="25 289" stroke-dashoffset="-236" stroke-linecap="butt"/>
+              <text x="60" y="56" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Inter">$2,840</text>
+              <text x="60" y="70" text-anchor="middle" fill="#64748b" font-size="8" font-family="Inter">this month</text>
+            </svg>
+          </div>
+          <div class="spending-legend">
+            <div class="legend-item"><span class="dot" style="background:#2563eb"></span>Housing <strong>40%</strong></div>
+            <div class="legend-item"><span class="dot" style="background:#16a34a"></span>Food <strong>20%</strong></div>
+            <div class="legend-item"><span class="dot" style="background:#f5c518"></span>Transport <strong>15%</strong></div>
+            <div class="legend-item"><span class="dot" style="background:#dc2626"></span>Shopping <strong>8%</strong></div>
+            <div class="legend-item"><span class="dot" style="background:#475569"></span>Other <strong>17%</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick pay form -->
+      <section class="quick-pay-card">
+        <h2 class="section-title">Quick Pay</h2>
+        <form class="pay-form" onsubmit="handleQuickPay(event)" data-track="form-quick-pay">
+          <div class="pay-field">
+            <label>Recipient</label>
+            <input type="text" placeholder="Name or email" id="pay-recipient" data-track="input-recipient" />
+          </div>
+          <div class="pay-field">
+            <label>Amount</label>
+            <div class="amount-input-wrap">
+              <span class="currency-sym">$</span>
+              <input type="number" placeholder="0.00" min="0" step="0.01" id="pay-amount" data-track="input-amount" />
+            </div>
+          </div>
+          <div class="pay-field">
+            <label>From account</label>
+            <select id="pay-from" data-track="select-from-account">
+              <option>Checking ••4821 ($24,830.57)</option>
+              <option>Savings ••9304 ($68,412.00)</option>
+            </select>
+          </div>
+          <div class="pay-field">
+            <label>Note (optional)</label>
+            <input type="text" placeholder="e.g. Rent, dinner, etc." id="pay-note" data-track="input-note" />
+          </div>
+          <button type="submit" class="btn-pay" data-track="btn-submit-pay">Send Payment</button>
+        </form>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Offers banner -->
+  <section class="offers-section">
+    <div class="offer-card" data-track="offer-loan">
+      <div class="offer-icon">🏠</div>
+      <div><strong>Pre-approved for $350,000 home loan</strong><br/><small>Rate: 6.75% APR · 30-yr fixed</small></div>
+      <button class="offer-cta" onclick="fakeAction(this,'Loading offer details…')">View Offer</button>
+    </div>
+    <div class="offer-card" data-track="offer-card-upgrade">
+      <div class="offer-icon">💳</div>
+      <div><strong>Upgrade to Platinum Rewards Card</strong><br/><small>Earn 3× points on travel & dining</small></div>
+      <button class="offer-cta" onclick="fakeAction(this,'Loading card details…')">Learn More</button>
+    </div>
+    <div class="offer-card" data-track="offer-cd">
+      <div class="offer-icon">📈</div>
+      <div><strong>5.10% APY 12-Month CD</strong><br/><small>FDIC insured · Open from $1,000</small></div>
+      <button class="offer-cta" onclick="fakeAction(this,'Loading CD rates…')">Open CD</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- Toast notification -->
+<div id="toast" class="toast hidden"></div>
+
+<!-- Tracker status (hidden, for debugging) -->
+<div id="tracker-status" style="display:none;"></div>
+
+<!-- ── Real-Time ML Risk HUD ── -->
+<div id="risk-hud" class="risk-hud">
+  <div class="risk-hud-header">
+    <div class="risk-hud-pulse"></div>
+    <span class="risk-hud-title">ML Risk Monitor</span>
+    <button class="risk-hud-toggle" onclick="toggleRiskHUD()" title="Minimize">−</button>
+  </div>
+  <div class="risk-hud-body" id="risk-hud-body">
+    <div class="risk-gauge-container">
+      <svg class="risk-gauge" viewBox="0 0 120 70">
+        <defs>
+          <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#22c55e"/>
+            <stop offset="33%" stop-color="#eab308"/>
+            <stop offset="66%" stop-color="#f97316"/>
+            <stop offset="100%" stop-color="#ef4444"/>
+          </linearGradient>
+        </defs>
+        <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8" stroke-linecap="round"/>
+        <path id="gauge-arc" d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="0 157"/>
+        <text id="gauge-score" x="60" y="55" text-anchor="middle" fill="white" font-size="22" font-weight="800" font-family="Inter">—</text>
+        <text id="gauge-label" x="60" y="67" text-anchor="middle" fill="#64748b" font-size="7" font-family="Inter">ANALYZING…</text>
+      </svg>
+    </div>
+    <div class="risk-details">
+      <div class="risk-detail-row">
+        <span class="risk-detail-icon">🤖</span>
+        <span class="risk-detail-label">Bot Detection</span>
+        <span class="risk-detail-value" id="hud-bot">—</span>
+      </div>
+      <div class="risk-detail-row">
+        <span class="risk-detail-icon">🔍</span>
+        <span class="risk-detail-label">Anomaly</span>
+        <span class="risk-detail-value" id="hud-anomaly">—</span>
+      </div>
+      <div class="risk-detail-row">
+        <span class="risk-detail-icon">📊</span>
+        <span class="risk-detail-label">Risk Level</span>
+        <span class="risk-detail-value" id="hud-level"><span class="risk-badge analyzing">ANALYZING</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ── Risk HUD ── */
+  .risk-hud {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 280px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.05) inset;
+    z-index: 9000;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Inter', sans-serif;
+  }
+  .risk-hud:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.08) inset;
+  }
+  .risk-hud-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .risk-hud-pulse {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 8px #22c55e80;
+    animation: hudPulse 2s ease-in-out infinite;
+  }
+  @keyframes hudPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+  .risk-hud-title {
+    flex: 1;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .risk-hud-toggle {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #64748b;
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    padding: 0; line-height: 1;
+  }
+  .risk-hud-toggle:hover {
+    background: rgba(255,255,255,0.1);
+    color: #e2e8f0;
+  }
+  .risk-hud-body {
+    padding: 12px 14px 16px;
+    transition: all 0.3s;
+  }
+  .risk-hud-body.collapsed {
+    display: none;
+  }
+  .risk-gauge-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .risk-gauge {
+    width: 160px;
+    height: 80px;
+  }
+  .risk-details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .risk-detail-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    transition: background 0.15s;
+  }
+  .risk-detail-row:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .risk-detail-icon {
+    font-size: 0.85rem;
+    width: 20px;
+    text-align: center;
+  }
+  .risk-detail-label {
+    flex: 1;
+    font-size: 0.76rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+  .risk-detail-value {
+    font-size: 0.76rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: #e2e8f0;
+  }
+  .risk-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .risk-badge.low { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+  .risk-badge.medium { background: rgba(234,179,8,0.15); color: #facc15; border: 1px solid rgba(234,179,8,0.3); }
+  .risk-badge.high { background: rgba(249,115,22,0.15); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
+  .risk-badge.critical { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); animation: criticalFlash 1.5s ease-in-out infinite; }
+  .risk-badge.analyzing { background: rgba(100,116,139,0.15); color: #94a3b8; border: 1px solid rgba(100,116,139,0.3); }
+  @keyframes criticalFlash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .hud-human { color: #4ade80; }
+  .hud-bot { color: #f87171; }
+  .hud-normal { color: #4ade80; }
+  .hud-anomaly { color: #f87171; }
+</style>
+
+<script src="{{ url_for('static', filename='js/tracker.js') }}"></script>
+<script>
+function fakeAction(btn, msg) {
+  const orig = btn.innerHTML;
+  btn.innerHTML = `<svg viewBox="0 0 20 20" fill="none" style="width:14px;height:14px;animation:spin 1s linear infinite;display:inline;"><circle cx="10" cy="10" r="7" stroke="rgba(255,255,255,0.3)" stroke-width="2"/><path d="M10 3a7 7 0 017 7" stroke="white" stroke-width="2" stroke-linecap="round"/></svg> ${msg}`;
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.innerHTML = orig;
+    btn.disabled = false;
+    showToast('Feature coming soon — this is a demo account.');
+  }, 1800);
+}
+
+function handleQuickPay(e) {
+  e.preventDefault();
+  const recipient = document.getElementById('pay-recipient').value;
+  const amount = document.getElementById('pay-amount').value;
+  if (!recipient || !amount) { showToast('Please fill in recipient and amount.'); return; }
+  const btn = e.target.querySelector('.btn-pay');
+  const orig = btn.innerHTML;
+  btn.innerHTML = 'Processing…';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.innerHTML = orig;
+    btn.disabled = false;
+    e.target.reset();
+    showToast(`Payment of $${parseFloat(amount).toFixed(2)} to "${recipient}" submitted.`);
+  }, 2000);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  t.classList.add('visible');
+  setTimeout(() => { t.classList.remove('visible'); t.classList.add('hidden'); }, 3500);
+}
+
+const style = document.createElement('style');
+style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+document.head.appendChild(style);
+
+// ── Risk HUD Logic ─────────────────────────────────────────────────────────
+let hudMinimized = false;
+
+function toggleRiskHUD() {
+  hudMinimized = !hudMinimized;
+  const body = document.getElementById('risk-hud-body');
+  const btn = document.querySelector('.risk-hud-toggle');
+  if (hudMinimized) {
+    body.classList.add('collapsed');
+    btn.textContent = '+';
+  } else {
+    body.classList.remove('collapsed');
+    btn.textContent = '−';
+  }
+}
+
+window.updateRiskHUD = function(ml) {
+  if (!ml) return;
+
+  // Update gauge arc
+  const score = ml.risk_score || 0;
+  const arcLength = (score / 100) * 157; // 157 is the full arc length
+  const gaugeArc = document.getElementById('gauge-arc');
+  if (gaugeArc) gaugeArc.setAttribute('stroke-dasharray', `${arcLength} 157`);
+
+  // Update score text
+  const gaugeScore = document.getElementById('gauge-score');
+  if (gaugeScore) gaugeScore.textContent = score;
+
+  // Update label
+  const gaugeLabel = document.getElementById('gauge-label');
+  if (gaugeLabel) gaugeLabel.textContent = (ml.risk_level || 'unknown').toUpperCase() + ' RISK';
+
+  // Update pulse color based on risk
+  const pulse = document.querySelector('.risk-hud-pulse');
+  if (pulse) {
+    const colors = { low: '#22c55e', medium: '#eab308', high: '#f97316', critical: '#ef4444' };
+    const c = colors[ml.risk_level] || '#64748b';
+    pulse.style.background = c;
+    pulse.style.boxShadow = `0 0 8px ${c}80`;
+  }
+
+  // Bot detection
+  const hudBot = document.getElementById('hud-bot');
+  if (hudBot) {
+    if (ml.is_bot) {
+      hudBot.innerHTML = '<span class="hud-bot">⚠ Bot</span>';
+    } else {
+      const conf = ml.bot_confidence !== undefined ? (ml.bot_confidence * 100).toFixed(0) : '?';
+      hudBot.innerHTML = `<span class="hud-human">✓ Human (${conf}%)</span>`;
+    }
+  }
+
+  // Anomaly detection
+  const hudAnomaly = document.getElementById('hud-anomaly');
+  if (hudAnomaly) {
+    if (ml.is_anomaly) {
+      hudAnomaly.innerHTML = '<span class="hud-anomaly">⚠ Anomaly</span>';
+    } else {
+      hudAnomaly.innerHTML = '<span class="hud-normal">✓ Normal</span>';
+    }
+  }
+
+  // Risk level badge
+  const hudLevel = document.getElementById('hud-level');
+  if (hudLevel) {
+    const level = ml.risk_level || 'analyzing';
+    hudLevel.innerHTML = `<span class="risk-badge ${level}">${level.toUpperCase()}</span>`;
+  }
+};
+
+window.showAutoKicked = function() {
+  const overlay = document.getElementById('kick-overlay');
+  if (overlay) {
+    overlay.style.display = 'flex';
+    overlay.querySelector('div:nth-child(3)').textContent = 'Suspicious activity detected by ML analysis.';
+    setTimeout(() => { window.location.href = '/login?kicked=1'; }, 2500);
+  } else {
+    alert('Session terminated: Suspicious activity detected.');
+    window.location.href = '/login?kicked=1';
+  }
+};
+
+// ── Session kick poller ────────────────────────────────────────────────────
+(function() {
+  const overlay = document.createElement('div');
+  overlay.id = 'kick-overlay';
+  overlay.style.cssText = 'display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:1rem;';
+  overlay.innerHTML = `
+    <svg viewBox="0 0 48 48" fill="none" style="width:56px;height:56px;">
+      <circle cx="24" cy="24" r="22" stroke="#ef4444" stroke-width="2"/>
+      <path d="M16 16l16 16M32 16L16 32" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    <div style="color:#f1f5f9;font-size:1.25rem;font-weight:700;font-family:Inter,sans-serif;">Session Terminated</div>
+    <div style="color:#94a3b8;font-size:0.9rem;font-family:Inter,sans-serif;">Your session has been flagged and removed.</div>
+    <div style="color:#64748b;font-size:0.8rem;font-family:Inter,sans-serif;">Redirecting to login…</div>
+  `;
+  document.body.appendChild(overlay);
+
+  function checkSession() {
+    fetch('/api/session-check').then(r => r.json()).then(data => {
+      if (data.kicked) {
+        overlay.style.display = 'flex';
+        setTimeout(() => { window.location.href = '/login?kicked=1'; }, 2500);
+      }
+    }).catch(() => {});
+  }
+
+  setInterval(checkSession, 5000);
+})();
+</script>
+</body>
+</html>

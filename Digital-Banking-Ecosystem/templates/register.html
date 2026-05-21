@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureBank — Open an Account</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    .reg-layout { display: grid; grid-template-columns: 1fr 540px; min-height: calc(100vh - 63px); }
+    .reg-panel { background: white; padding: 3rem 2.5rem; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid #e2e8f0; overflow-y: auto; }
+    .reg-card { max-width: 500px; margin: 0 auto; width: 100%; }
+    .step-bar { display: flex; align-items: center; gap: 0; margin-bottom: 2rem; }
+    .step { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; flex: 1; }
+    .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+    .step-dot.active { background: #1a3a5c; color: white; }
+    .step-dot.done { background: #16a34a; color: white; }
+    .step-dot.inactive { background: #e2e8f0; color: #94a3b8; }
+    .step-label { font-size: 0.68rem; font-weight: 600; color: #94a3b8; text-align: center; white-space: nowrap; }
+    .step-label.active { color: #1a3a5c; }
+    .step-line { height: 2px; flex: 1; margin-top: -1.6rem; }
+    .step-line.done { background: #16a34a; }
+    .step-line.inactive { background: #e2e8f0; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-grid .full { grid-column: span 2; }
+    .section-divider { font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.75rem 0 0.25rem; border-top: 1px solid #f1f5f9; grid-column: span 2; margin-top: 0.5rem; }
+
+    .field-group label { font-size: 0.82rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 0.4rem; }
+    .field-group input, .field-group select { width: 100%; padding: 0.6rem 0.85rem; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.88rem; font-family: inherit; color: #1e293b; background: #f8fafc; outline: none; transition: border-color .18s, box-shadow .18s; }
+    .field-group input:focus, .field-group select:focus { border-color: #1a3a5c; box-shadow: 0 0 0 3px rgba(26,58,92,0.1); background: white; }
+    .field-group input::placeholder { color: #cbd5e1; }
+    .ssn-note { font-size: 0.72rem; color: #94a3b8; margin-top: 0.3rem; }
+
+    .terms-check { display: flex; align-items: flex-start; gap: 0.65rem; font-size: 0.82rem; color: #64748b; }
+    .terms-check input { margin-top: 2px; accent-color: #1a3a5c; }
+    .terms-check a { color: #2563eb; }
+
+    .promo-panel { background: linear-gradient(160deg, #0f2540 0%, #1a3a5c 50%, #1e4d7b 100%); padding: 4rem 3rem; display: flex; flex-direction: column; justify-content: center; }
+    .promo-steps { display: flex; flex-direction: column; gap: 2rem; margin-top: 2rem; }
+    .promo-step { display: flex; gap: 1.25rem; align-items: flex-start; }
+    .promo-step-num { width: 36px; height: 36px; border-radius: 50%; background: rgba(245,197,24,0.18); border: 1px solid rgba(245,197,24,0.4); color: #f5c518; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .promo-step-body strong { color: white; display: block; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .promo-step-body span { color: rgba(255,255,255,0.55); font-size: 0.84rem; }
+    .bonus-banner { margin-top: 2.5rem; background: rgba(245,197,24,0.1); border: 1px solid rgba(245,197,24,0.25); border-radius: 12px; padding: 1.25rem 1.5rem; }
+    .bonus-banner strong { color: #f5c518; font-size: 1rem; display: block; margin-bottom: 0.3rem; }
+    .bonus-banner span { color: rgba(255,255,255,0.6); font-size: 0.82rem; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 40 40" fill="none">
+          <rect width="40" height="40" rx="8" fill="#1a3a5c"/>
+          <path d="M20 8L32 14V16H8V14L20 8Z" fill="#f5c518"/>
+          <rect x="10" y="18" width="4" height="10" fill="white" opacity="0.9"/>
+          <rect x="18" y="18" width="4" height="10" fill="white" opacity="0.9"/>
+          <rect x="26" y="18" width="4" height="10" fill="white" opacity="0.9"/>
+          <rect x="8" y="29" width="24" height="3" fill="#f5c518"/>
+        </svg>
+        <span class="brand-name">SecureBank</span>
+      </div>
+      <nav class="topbar-nav">
+        <a href="#">Personal</a><a href="#">Business</a><a href="#">Investments</a><a href="#">Help</a>
+      </nav>
+      <div class="topbar-actions">
+        <a href="/login" class="btn-outline-sm">Sign In</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="reg-layout">
+    <!-- Left promo -->
+    <section class="promo-panel">
+      <div class="promo-badge" style="display:inline-flex;align-items:center;background:rgba(245,197,24,0.15);border:1px solid rgba(245,197,24,0.4);color:#f5c518;font-size:0.78rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.8rem;border-radius:20px;margin-bottom:1.5rem;width:fit-content;">Takes 3 minutes</div>
+      <h1 style="font-size:2.2rem;font-weight:800;color:white;line-height:1.1;letter-spacing:-0.03em;margin-bottom:0.75rem;">Open your account<br/>today.</h1>
+      <p style="color:rgba(255,255,255,0.6);font-size:0.95rem;margin-bottom:0;">No fees. No minimums. FDIC insured.</p>
+
+      <div class="promo-steps">
+        <div class="promo-step">
+          <div class="promo-step-num">1</div>
+          <div class="promo-step-body">
+            <strong>Enter your details</strong>
+            <span>Basic personal info — takes under 2 minutes</span>
+          </div>
+        </div>
+        <div class="promo-step">
+          <div class="promo-step-num">2</div>
+          <div class="promo-step-body">
+            <strong>Verify your identity</strong>
+            <span>We use 256-bit encryption to keep you safe</span>
+          </div>
+        </div>
+        <div class="promo-step">
+          <div class="promo-step-num">3</div>
+          <div class="promo-step-body">
+            <strong>Fund your account</strong>
+            <span>Transfer from any bank — instant ACH available</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bonus-banner">
+        <strong>🎁 $300 Welcome Bonus</strong>
+        <span>Open a checking account and receive $300 after your first qualifying direct deposit of $500+</span>
+      </div>
+    </section>
+
+    <!-- Right form -->
+    <section class="reg-panel">
+      <div class="reg-card">
+        <div class="step-bar">
+          <div class="step">
+            <div class="step-dot active">1</div>
+            <div class="step-label active">Personal Info</div>
+          </div>
+          <div class="step-line inactive"></div>
+          <div class="step">
+            <div class="step-dot inactive">2</div>
+            <div class="step-label">Identity</div>
+          </div>
+          <div class="step-line inactive"></div>
+          <div class="step">
+            <div class="step-dot inactive">3</div>
+            <div class="step-label">Funding</div>
+          </div>
+          <div class="step-line inactive"></div>
+          <div class="step">
+            <div class="step-dot inactive">✓</div>
+            <div class="step-label">Done</div>
+          </div>
+        </div>
+
+        <div class="login-header">
+          <h2>Open your account</h2>
+          <p>All fields are required. Your information is encrypted and never shared.</p>
+        </div>
+
+        <form method="POST" action="/register" autocomplete="on">
+          {% if error %}
+          <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:0.85rem 1rem;display:flex;align-items:flex-start;gap:0.6rem;font-size:0.85rem;color:#991b1b;margin-bottom:0.5rem;">
+            <svg viewBox="0 0 16 16" fill="none" style="width:15px;height:15px;flex-shrink:0;margin-top:1px;"><circle cx="8" cy="8" r="7" stroke="#dc2626" stroke-width="1.2"/><path d="M8 5v3M8 11h.01" stroke="#dc2626" stroke-width="1.2" stroke-linecap="round"/></svg>
+            {{ error }}
+          </div>
+          {% endif %}
+          <div class="form-grid">
+
+            <div class="section-divider">Account Details</div>
+
+            <div class="field-group full">
+              <label>Account Type</label>
+              <select name="account_type">
+                <option value="personal">Personal Checking</option>
+                <option value="savings">Personal Savings</option>
+                <option value="business">Business Checking</option>
+                <option value="premier">Premier / Private Banking</option>
+              </select>
+            </div>
+
+            <div class="field-group full">
+              <label>Choose a Username</label>
+              <input type="text" name="username" placeholder="e.g. john_doe92" autocomplete="username" required />
+            </div>
+
+            <div class="field-group">
+              <label>Password</label>
+              <input type="password" name="password" placeholder="Min. 8 characters" autocomplete="new-password" required />
+            </div>
+            <div class="field-group">
+              <label>Confirm Password</label>
+              <input type="password" name="confirm_password" placeholder="Repeat password" required />
+            </div>
+
+            <div class="section-divider">Personal Information</div>
+
+            <div class="field-group full">
+              <label>Full Legal Name</label>
+              <input type="text" name="full_name" placeholder="As it appears on your ID" autocomplete="name" required />
+            </div>
+
+            <div class="field-group">
+              <label>Email Address</label>
+              <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+            </div>
+            <div class="field-group">
+              <label>Phone Number</label>
+              <input type="tel" name="phone" placeholder="(555) 000-0000" autocomplete="tel" required />
+            </div>
+
+            <div class="field-group">
+              <label>Date of Birth</label>
+              <input type="date" name="dob" autocomplete="bday" required />
+            </div>
+            <div class="field-group">
+              <label>SSN — Last 4 Digits</label>
+              <input type="text" name="ssn_last4" placeholder="XXXX" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" required />
+              <div class="ssn-note">🔒 Used for identity verification only</div>
+            </div>
+
+            <div class="section-divider">Home Address</div>
+
+            <div class="field-group full">
+              <label>Street Address</label>
+              <input type="text" name="address" placeholder="123 Main St, Apt 4B" autocomplete="street-address" required />
+            </div>
+
+            <div class="field-group">
+              <label>City</label>
+              <input type="text" name="city" placeholder="New York" autocomplete="address-level2" required />
+            </div>
+            <div class="field-group">
+              <label>State</label>
+              <select name="state" autocomplete="address-level1">
+                <option value="">Select state</option>
+                <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
+                <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
+                <option>FL</option><option>GA</option><option>HI</option><option>ID</option>
+                <option>IL</option><option>IN</option><option>IA</option><option>KS</option>
+                <option>KY</option><option>LA</option><option>ME</option><option>MD</option>
+                <option>MA</option><option>MI</option><option>MN</option><option>MS</option>
+                <option>MO</option><option>MT</option><option>NE</option><option>NV</option>
+                <option>NH</option><option>NJ</option><option>NM</option><option>NY</option>
+                <option>NC</option><option>ND</option><option>OH</option><option>OK</option>
+                <option>OR</option><option>PA</option><option>RI</option><option>SC</option>
+                <option>SD</option><option>TN</option><option>TX</option><option>UT</option>
+                <option>VT</option><option>VA</option><option>WA</option><option>WV</option>
+                <option>WI</option><option>WY</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label>ZIP Code</label>
+              <input type="text" name="zip_code" placeholder="10001" maxlength="10" autocomplete="postal-code" required />
+            </div>
+
+            <div class="full" style="margin-top:0.5rem;">
+              <div class="terms-check">
+                <input type="checkbox" name="terms" id="terms" required />
+                <label for="terms">I agree to the <a href="#">Terms of Service</a>, <a href="#">Privacy Policy</a>, and <a href="#">E-Sign Disclosure</a>. I certify this information is accurate.</label>
+              </div>
+            </div>
+
+            <div class="full" style="margin-top:0.5rem;">
+              <button type="submit" class="btn-primary" style="width:100%;">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M3 10h14M10 3l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Open My Account
+              </button>
+            </div>
+
+          </div>
+        </form>
+
+        <div class="login-footer" style="margin-top:1.5rem;">
+          <div class="security-notice">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M8 1L2 3.5V8c0 3.3 2.5 6.4 6 7 3.5-.6 6-3.7 6-7V3.5L8 1z" stroke="#16a34a" stroke-width="1.2"/><path d="M5.5 8l2 2 3-3" stroke="#16a34a" stroke-width="1.2" stroke-linecap="round"/></svg>
+            256-bit SSL · FDIC Insured · Your data is never sold
+          </div>
+          <p class="register-prompt">Already have an account? <a href="/login">Sign in</a></p>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

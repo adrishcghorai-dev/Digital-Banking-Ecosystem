@@ -1,0 +1,1989 @@
+[
+  {
+    "type": "behavior_snapshot",
+    "is_final": false,
+    "session_id": "eyJhZG1pbiI6dHJ1ZSwidXNlcm5hbWUiOiJhbnNodWxrMDIxMDEiLCJ2ZXJpZmllZCI6dHJ1ZX0.ag3Qeg.4y5G3t4xmBwcu4ZxWJg2iPcwXDk",
+    "page": "/home",
+    "session_duration_ms": 3002,
+    "mouse_sample_count": 18,
+    "mouse_speed_mean": 678.1014043929447,
+    "mouse_speed_std": 552.6838459535816,
+    "mouse_speed_max": 1844.075689341409,
+    "mouse_acceleration_mean": 8315.754247089546,
+    "mouse_acceleration_std": 9860.537550436486,
+    "heatmap_grid_cols": 32,
+    "heatmap_grid_rows": 18,
+    "heatmap": [
+      {
+        "col": 21,
+        "row": 4,
+        "count": 1
+      },
+      {
+        "col": 20,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 23,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 24,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 20,
+        "row": 6,
+        "count": 19
+      },
+      {
+        "col": 21,
+        "row": 6,
+        "count": 10
+      },
+      {
+        "col": 22,
+        "row": 6,
+        "count": 6
+      },
+      {
+        "col": 23,
+        "row": 6,
+        "count": 1
+      },
+      {
+        "col": 24,
+        "row": 6,
+        "count": 12
+      },
+      {
+        "col": 23,
+        "row": 7,
+        "count": 12
+      },
+      {
+        "col": 23,
+        "row": 8,
+        "count": 13
+      },
+      {
+        "col": 23,
+        "row": 9,
+        "count": 9
+      },
+      {
+        "col": 23,
+        "row": 10,
+        "count": 4
+      },
+      {
+        "col": 23,
+        "row": 11,
+        "count": 2
+      },
+      {
+        "col": 23,
+        "row": 12,
+        "count": 4
+      },
+      {
+        "col": 23,
+        "row": 13,
+        "count": 4
+      },
+      {
+        "col": 23,
+        "row": 14,
+        "count": 3
+      },
+      {
+        "col": 23,
+        "row": 15,
+        "count": 2
+      }
+    ],
+    "dwell_by_element": [
+      {
+        "element": "account-credit",
+        "dwell_ms": 257
+      },
+      {
+        "element": "account-savings",
+        "dwell_ms": 159
+      },
+      {
+        "element": "div.card-label",
+        "dwell_ms": 111
+      },
+      {
+        "element": "span.balance-amount",
+        "dwell_ms": 107
+      },
+      {
+        "element": "btn-wire",
+        "dwell_ms": 61
+      },
+      {
+        "element": "span.balance-cents",
+        "dwell_ms": 61
+      },
+      {
+        "element": "span.balance-change",
+        "dwell_ms": 56
+      },
+      {
+        "element": "div.card-footer",
+        "dwell_ms": 48
+      },
+      {
+        "element": "section.accounts-row",
+        "dwell_ms": 42
+      },
+      {
+        "element": "div.card-number",
+        "dwell_ms": 39
+      },
+      {
+        "element": "main.app-main",
+        "dwell_ms": 35
+      },
+      {
+        "element": "section.quick-actions-section",
+        "dwell_ms": 27
+      },
+      {
+        "element": "div",
+        "dwell_ms": 9
+      },
+      {
+        "element": "span",
+        "dwell_ms": 8
+      },
+      {
+        "element": "h2.section-title",
+        "dwell_ms": 7
+      }
+    ],
+    "click_count": 0,
+    "clicks": [],
+    "scroll_event_count": 0,
+    "scroll_speed_mean": null,
+    "scroll_speed_max": null,
+    "max_scroll_depth_px": 0,
+    "keystroke_count": 0,
+    "char_count": 0,
+    "typing_speed_cps": 0,
+    "key_dwell_mean_ms": null,
+    "key_dwell_std_ms": null,
+    "key_flight_mean_ms": null,
+    "key_flight_std_ms": null,
+    "keystrokes": [],
+    "total_idle_ms": 0,
+    "idle_ratio": 0,
+    "geolocation": {
+      "error": "Only secure origins are allowed (see: https://permanently-removed.invalid/Y0ZkNV)."
+    },
+    "fingerprint": {
+      "screen_width": 1536,
+      "screen_height": 864,
+      "viewport_width": 1528,
+      "viewport_height": 698,
+      "color_depth": 32,
+      "pixel_ratio": 1.25,
+      "timezone": "Asia/Calcutta",
+      "timezone_offset": -330,
+      "language": "en-US",
+      "languages": [
+        "en-US",
+        "en",
+        "en-IN"
+      ],
+      "platform": "Win32",
+      "hardware_concurrency": 16,
+      "touch_points": 0,
+      "cookie_enabled": true,
+      "do_not_track": null,
+      "online": true,
+      "plugins_count": 5,
+      "webgl_vendor": "Google Inc. (Intel)",
+      "webgl_renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "referrer": "http://192.168.31.35:5001/register",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0"
+    },
+    "client_timestamp": "2026-05-20T15:17:18.092Z",
+    "server_timestamp": "2026-05-20T15:17:18.100088",
+    "ip_address": "192.168.31.35",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0"
+  },
+  {
+    "type": "behavior_snapshot",
+    "is_final": false,
+    "session_id": "eyJhZG1pbiI6dHJ1ZSwidXNlcm5hbWUiOiJhbnNodWxrMDIxMDEiLCJ2ZXJpZmllZCI6dHJ1ZX0.ag3Qeg.4y5G3t4xmBwcu4ZxWJg2iPcwXDk",
+    "page": "/home",
+    "session_duration_ms": 30584,
+    "mouse_sample_count": 101,
+    "mouse_speed_mean": 1090.7765835457594,
+    "mouse_speed_std": 1074.9282697893739,
+    "mouse_speed_max": 5129.990373314169,
+    "mouse_acceleration_mean": 12979.419252883028,
+    "mouse_acceleration_std": 14987.8179628933,
+    "heatmap_grid_cols": 32,
+    "heatmap_grid_rows": 18,
+    "heatmap": [
+      {
+        "col": 8,
+        "row": 0,
+        "count": 25
+      },
+      {
+        "col": 16,
+        "row": 0,
+        "count": 1
+      },
+      {
+        "col": 21,
+        "row": 0,
+        "count": 1
+      },
+      {
+        "col": 25,
+        "row": 0,
+        "count": 2
+      },
+      {
+        "col": 26,
+        "row": 0,
+        "count": 3
+      },
+      {
+        "col": 27,
+        "row": 0,
+        "count": 3
+      },
+      {
+        "col": 28,
+        "row": 0,
+        "count": 6
+      },
+      {
+        "col": 8,
+        "row": 1,
+        "count": 17
+      },
+      {
+        "col": 9,
+        "row": 1,
+        "count": 12
+      },
+      {
+        "col": 10,
+        "row": 1,
+        "count": 7
+      },
+      {
+        "col": 11,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 12,
+        "row": 1,
+        "count": 2
+      },
+      {
+        "col": 13,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 14,
+        "row": 1,
+        "count": 4
+      },
+      {
+        "col": 15,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 16,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 17,
+        "row": 1,
+        "count": 4
+      },
+      {
+        "col": 18,
+        "row": 1,
+        "count": 6
+      },
+      {
+        "col": 19,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 20,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 21,
+        "row": 1,
+        "count": 2
+      },
+      {
+        "col": 22,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 23,
+        "row": 1,
+        "count": 1
+      },
+      {
+        "col": 24,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 26,
+        "row": 1,
+        "count": 2
+      },
+      {
+        "col": 27,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 28,
+        "row": 1,
+        "count": 8
+      },
+      {
+        "col": 29,
+        "row": 1,
+        "count": 4
+      },
+      {
+        "col": 8,
+        "row": 2,
+        "count": 11
+      },
+      {
+        "col": 9,
+        "row": 2,
+        "count": 1
+      },
+      {
+        "col": 10,
+        "row": 2,
+        "count": 2
+      },
+      {
+        "col": 11,
+        "row": 2,
+        "count": 10
+      },
+      {
+        "col": 12,
+        "row": 2,
+        "count": 2
+      },
+      {
+        "col": 13,
+        "row": 2,
+        "count": 1
+      },
+      {
+        "col": 20,
+        "row": 2,
+        "count": 1
+      },
+      {
+        "col": 24,
+        "row": 2,
+        "count": 4
+      },
+      {
+        "col": 25,
+        "row": 2,
+        "count": 7
+      },
+      {
+        "col": 26,
+        "row": 2,
+        "count": 2
+      },
+      {
+        "col": 8,
+        "row": 3,
+        "count": 13
+      },
+      {
+        "col": 9,
+        "row": 3,
+        "count": 6
+      },
+      {
+        "col": 11,
+        "row": 3,
+        "count": 1
+      },
+      {
+        "col": 12,
+        "row": 3,
+        "count": 7
+      },
+      {
+        "col": 13,
+        "row": 3,
+        "count": 2
+      },
+      {
+        "col": 20,
+        "row": 3,
+        "count": 1
+      },
+      {
+        "col": 21,
+        "row": 3,
+        "count": 8
+      },
+      {
+        "col": 22,
+        "row": 3,
+        "count": 7
+      },
+      {
+        "col": 23,
+        "row": 3,
+        "count": 6
+      },
+      {
+        "col": 24,
+        "row": 3,
+        "count": 4
+      },
+      {
+        "col": 25,
+        "row": 3,
+        "count": 1
+      },
+      {
+        "col": 9,
+        "row": 4,
+        "count": 9
+      },
+      {
+        "col": 10,
+        "row": 4,
+        "count": 2
+      },
+      {
+        "col": 12,
+        "row": 4,
+        "count": 1
+      },
+      {
+        "col": 13,
+        "row": 4,
+        "count": 12
+      },
+      {
+        "col": 18,
+        "row": 4,
+        "count": 1
+      },
+      {
+        "col": 19,
+        "row": 4,
+        "count": 23
+      },
+      {
+        "col": 20,
+        "row": 4,
+        "count": 14
+      },
+      {
+        "col": 21,
+        "row": 4,
+        "count": 8
+      },
+      {
+        "col": 22,
+        "row": 4,
+        "count": 2
+      },
+      {
+        "col": 23,
+        "row": 4,
+        "count": 2
+      },
+      {
+        "col": 24,
+        "row": 4,
+        "count": 1
+      },
+      {
+        "col": 25,
+        "row": 4,
+        "count": 1
+      },
+      {
+        "col": 10,
+        "row": 5,
+        "count": 4
+      },
+      {
+        "col": 11,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 12,
+        "row": 5,
+        "count": 4
+      },
+      {
+        "col": 17,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 18,
+        "row": 5,
+        "count": 7
+      },
+      {
+        "col": 19,
+        "row": 5,
+        "count": 7
+      },
+      {
+        "col": 20,
+        "row": 5,
+        "count": 6
+      },
+      {
+        "col": 21,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 23,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 24,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 25,
+        "row": 5,
+        "count": 1
+      },
+      {
+        "col": 10,
+        "row": 6,
+        "count": 2
+      },
+      {
+        "col": 11,
+        "row": 6,
+        "count": 4
+      },
+      {
+        "col": 12,
+        "row": 6,
+        "count": 1
+      },
+      {
+        "col": 14,
+        "row": 6,
+        "count": 2
+      },
+      {
+        "col": 15,
+        "row": 6,
+        "count": 2
+      },
+      {
+        "col": 16,
+        "row": 6,
+        "count": 3
+      },
+      {
+        "col": 17,
+        "row": 6,
+        "count": 7
+      },
+      {
+        "col": 18,
+        "row": 6,
+        "count": 3
+      },
+      {
+        "col": 19,
+        "row": 6,
+        "count": 1
+      },
+      {
+        "col": 20,
+        "row": 6,
+        "count": 19
+      },
+      {
+        "col": 21,
+        "row": 6,
+        "count": 10
+      },
+      {
+        "col": 22,
+        "row": 6,
+        "count": 6
+      },
+      {
+        "col": 23,
+        "row": 6,
+        "count": 1
+      },
+      {
+        "col": 24,
+        "row": 6,
+        "count": 13
+      },
+      {
+        "col": 25,
+        "row": 6,
+        "count": 1
+      },
+      {
+        "col": 9,
+        "row": 7,
+        "count": 4
+      },
+      {
+        "col": 10,
+        "row": 7,
+        "count": 1
+      },
+      {
+        "col": 12,
+        "row": 7,
+        "count": 1
+      },
+      {
+        "col": 13,
+        "row": 7,
+        "count": 6
+      },
+      {
+        "col": 14,
+        "row": 7,
+        "count": 4
+      },
+      {
+        "col": 15,
+        "row": 7,
+        "count": 5
+      },
+      {
+        "col": 16,
+        "row": 7,
+        "count": 6
+      },
+      {
+        "col": 17,
+        "row": 7,
+        "count": 2
+      },
+      {
+        "col": 19,
+        "row": 7,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 7,
+        "count": 12
+      },
+      {
+        "col": 24,
+        "row": 7,
+        "count": 1
+      },
+      {
+        "col": 25,
+        "row": 7,
+        "count": 1
+      },
+      {
+        "col": 7,
+        "row": 8,
+        "count": 3
+      },
+      {
+        "col": 8,
+        "row": 8,
+        "count": 4
+      },
+      {
+        "col": 11,
+        "row": 8,
+        "count": 2
+      },
+      {
+        "col": 12,
+        "row": 8,
+        "count": 1
+      },
+      {
+        "col": 18,
+        "row": 8,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 8,
+        "count": 13
+      },
+      {
+        "col": 24,
+        "row": 8,
+        "count": 1
+      },
+      {
+        "col": 25,
+        "row": 8,
+        "count": 1
+      },
+      {
+        "col": 6,
+        "row": 9,
+        "count": 2
+      },
+      {
+        "col": 7,
+        "row": 9,
+        "count": 13
+      },
+      {
+        "col": 8,
+        "row": 9,
+        "count": 5
+      },
+      {
+        "col": 9,
+        "row": 9,
+        "count": 2
+      },
+      {
+        "col": 10,
+        "row": 9,
+        "count": 4
+      },
+      {
+        "col": 11,
+        "row": 9,
+        "count": 1
+      },
+      {
+        "col": 18,
+        "row": 9,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 9,
+        "count": 9
+      },
+      {
+        "col": 24,
+        "row": 9,
+        "count": 2
+      },
+      {
+        "col": 25,
+        "row": 9,
+        "count": 1
+      },
+      {
+        "col": 9,
+        "row": 10,
+        "count": 8
+      },
+      {
+        "col": 18,
+        "row": 10,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 10,
+        "count": 4
+      },
+      {
+        "col": 25,
+        "row": 10,
+        "count": 2
+      },
+      {
+        "col": 18,
+        "row": 11,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 11,
+        "count": 3
+      },
+      {
+        "col": 25,
+        "row": 11,
+        "count": 2
+      },
+      {
+        "col": 18,
+        "row": 12,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 12,
+        "count": 5
+      },
+      {
+        "col": 24,
+        "row": 12,
+        "count": 3
+      },
+      {
+        "col": 18,
+        "row": 13,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 13,
+        "count": 5
+      },
+      {
+        "col": 24,
+        "row": 13,
+        "count": 3
+      },
+      {
+        "col": 18,
+        "row": 14,
+        "count": 1
+      },
+      {
+        "col": 19,
+        "row": 14,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 14,
+        "count": 3
+      },
+      {
+        "col": 24,
+        "row": 14,
+        "count": 4
+      },
+      {
+        "col": 19,
+        "row": 15,
+        "count": 2
+      },
+      {
+        "col": 23,
+        "row": 15,
+        "count": 2
+      },
+      {
+        "col": 24,
+        "row": 15,
+        "count": 14
+      },
+      {
+        "col": 19,
+        "row": 16,
+        "count": 1
+      },
+      {
+        "col": 20,
+        "row": 16,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 16,
+        "count": 2
+      },
+      {
+        "col": 24,
+        "row": 16,
+        "count": 5
+      },
+      {
+        "col": 20,
+        "row": 17,
+        "count": 3
+      },
+      {
+        "col": 21,
+        "row": 17,
+        "count": 2
+      },
+      {
+        "col": 23,
+        "row": 17,
+        "count": 13
+      }
+    ],
+    "dwell_by_element": [
+      {
+        "element": "div.txn-meta",
+        "dwell_ms": 3658
+      },
+      {
+        "element": "main.app-main",
+        "dwell_ms": 3573
+      },
+      {
+        "element": "section.greeting-bar",
+        "dwell_ms": 1688
+      },
+      {
+        "element": "section.quick-actions-section",
+        "dwell_ms": 1558
+      },
+      {
+        "element": "account-savings",
+        "dwell_ms": 1339
+      },
+      {
+        "element": "div.user-pill",
+        "dwell_ms": 833
+      },
+      {
+        "element": "div.app-nav-inner",
+        "dwell_ms": 726
+      },
+      {
+        "element": "txn-payroll",
+        "dwell_ms": 666
+      },
+      {
+        "element": "txn-starbucks",
+        "dwell_ms": 570
+      },
+      {
+        "element": "div.qa-icon",
+        "dwell_ms": 388
+      },
+      {
+        "element": "div.card-footer",
+        "dwell_ms": 348
+      },
+      {
+        "element": "account-credit",
+        "dwell_ms": 333
+      },
+      {
+        "element": "span.balance-amount",
+        "dwell_ms": 315
+      },
+      {
+        "element": "a.nav-link",
+        "dwell_ms": 309
+      },
+      {
+        "element": "button.icon-btn",
+        "dwell_ms": 291
+      },
+      {
+        "element": "account-checking",
+        "dwell_ms": 144
+      },
+      {
+        "element": "span.balance-change",
+        "dwell_ms": 143
+      },
+      {
+        "element": "div.card-label",
+        "dwell_ms": 131
+      },
+      {
+        "element": "btn-wire",
+        "dwell_ms": 127
+      },
+      {
+        "element": "h2.section-title",
+        "dwell_ms": 108
+      }
+    ],
+    "click_count": 2,
+    "clicks": [
+      {
+        "x": 1388,
+        "y": 40,
+        "t": 16390,
+        "target": "div.user-pill",
+        "button": 0
+      },
+      {
+        "x": 916,
+        "y": 162,
+        "t": 17675,
+        "target": "main.app-main",
+        "button": 0
+      }
+    ],
+    "scroll_event_count": 175,
+    "scroll_speed_mean": 1344.6406537767905,
+    "scroll_speed_max": 14533.332824707031,
+    "max_scroll_depth_px": 736.7999877929688,
+    "keystroke_count": 0,
+    "char_count": 0,
+    "typing_speed_cps": 0,
+    "key_dwell_mean_ms": null,
+    "key_dwell_std_ms": null,
+    "key_flight_mean_ms": null,
+    "key_flight_std_ms": null,
+    "keystrokes": [],
+    "total_idle_ms": 0,
+    "idle_ratio": 0,
+    "geolocation": {
+      "error": "Only secure origins are allowed (see: https://permanently-removed.invalid/Y0ZkNV)."
+    },
+    "fingerprint": {
+      "screen_width": 1536,
+      "screen_height": 864,
+      "viewport_width": 1528,
+      "viewport_height": 698,
+      "color_depth": 32,
+      "pixel_ratio": 1.25,
+      "timezone": "Asia/Calcutta",
+      "timezone_offset": -330,
+      "language": "en-US",
+      "languages": [
+        "en-US",
+        "en",
+        "en-IN"
+      ],
+      "platform": "Win32",
+      "hardware_concurrency": 16,
+      "touch_points": 0,
+      "cookie_enabled": true,
+      "do_not_track": null,
+      "online": true,
+      "plugins_count": 5,
+      "webgl_vendor": "Google Inc. (Intel)",
+      "webgl_renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "referrer": "http://192.168.31.35:5001/register",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0"
+    },
+    "client_timestamp": "2026-05-20T15:17:45.672Z",
+    "server_timestamp": "2026-05-20T15:17:45.707564",
+    "ip_address": "192.168.31.35",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0"
+  },
+  {
+    "type": "behavior_snapshot",
+    "is_final": false,
+    "session_id": "eyJhZG1pbiI6dHJ1ZSwidXNlcm5hbWUiOiJhbnNodWxrMDIxMDEiLCJ2ZXJpZmllZCI6ZmFsc2V9.ag3Qmw.PaGB9PccVLNzJlSW4E3msmC9jG8",
+    "page": "/home",
+    "session_duration_ms": 60573,
+    "mouse_sample_count": 101,
+    "mouse_speed_mean": 1090.7765835457594,
+    "mouse_speed_std": 1074.9282697893739,
+    "mouse_speed_max": 5129.990373314169,
+    "mouse_acceleration_mean": 12979.419252883028,
+    "mouse_acceleration_std": 14987.8179628933,
+    "heatmap_grid_cols": 32,
+    "heatmap_grid_rows": 18,
+    "heatmap": [
+      {
+        "col": 8,
+        "row": 0,
+        "count": 25
+      },
+      {
+        "col": 16,
+        "row": 0,
+        "count": 1
+      },
+      {
+        "col": 21,
+        "row": 0,
+        "count": 1
+      },
+      {
+        "col": 25,
+        "row": 0,
+        "count": 2
+      },
+      {
+        "col": 26,
+        "row": 0,
+        "count": 3
+      },
+      {
+        "col": 27,
+        "row": 0,
+        "count": 3
+      },
+      {
+        "col": 28,
+        "row": 0,
+        "count": 6
+      },
+      {
+        "col": 8,
+        "row": 1,
+        "count": 17
+      },
+      {
+        "col": 9,
+        "row": 1,
+        "count": 12
+      },
+      {
+        "col": 10,
+        "row": 1,
+        "count": 7
+      },
+      {
+        "col": 11,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 12,
+        "row": 1,
+        "count": 2
+      },
+      {
+        "col": 13,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 14,
+        "row": 1,
+        "count": 4
+      },
+      {
+        "col": 15,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 16,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 17,
+        "row": 1,
+        "count": 4
+      },
+      {
+        "col": 18,
+        "row": 1,
+        "count": 6
+      },
+      {
+        "col": 19,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 20,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 21,
+        "row": 1,
+        "count": 2
+      },
+      {
+        "col": 22,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 23,
+        "row": 1,
+        "count": 1
+      },
+      {
+        "col": 24,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 26,
+        "row": 1,
+        "count": 2
+      },
+      {
+        "col": 27,
+        "row": 1,
+        "count": 3
+      },
+      {
+        "col": 28,
+        "row": 1,
+        "count": 8
+      },
+      {
+        "col": 29,
+        "row": 1,
+        "count": 4
+      },
+      {
+        "col": 8,
+        "row": 2,
+        "count": 11
+      },
+      {
+        "col": 9,
+        "row": 2,
+        "count": 1
+      },
+      {
+        "col": 10,
+        "row": 2,
+        "count": 2
+      },
+      {
+        "col": 11,
+        "row": 2,
+        "count": 10
+      },
+      {
+        "col": 12,
+        "row": 2,
+        "count": 2
+      },
+      {
+        "col": 13,
+        "row": 2,
+        "count": 1
+      },
+      {
+        "col": 20,
+        "row": 2,
+        "count": 1
+      },
+      {
+        "col": 24,
+        "row": 2,
+        "count": 4
+      },
+      {
+        "col": 25,
+        "row": 2,
+        "count": 7
+      },
+      {
+        "col": 26,
+        "row": 2,
+        "count": 2
+      },
+      {
+        "col": 8,
+        "row": 3,
+        "count": 13
+      },
+      {
+        "col": 9,
+        "row": 3,
+        "count": 6
+      },
+      {
+        "col": 11,
+        "row": 3,
+        "count": 1
+      },
+      {
+        "col": 12,
+        "row": 3,
+        "count": 7
+      },
+      {
+        "col": 13,
+        "row": 3,
+        "count": 2
+      },
+      {
+        "col": 20,
+        "row": 3,
+        "count": 1
+      },
+      {
+        "col": 21,
+        "row": 3,
+        "count": 8
+      },
+      {
+        "col": 22,
+        "row": 3,
+        "count": 7
+      },
+      {
+        "col": 23,
+        "row": 3,
+        "count": 6
+      },
+      {
+        "col": 24,
+        "row": 3,
+        "count": 4
+      },
+      {
+        "col": 25,
+        "row": 3,
+        "count": 1
+      },
+      {
+        "col": 9,
+        "row": 4,
+        "count": 9
+      },
+      {
+        "col": 10,
+        "row": 4,
+        "count": 2
+      },
+      {
+        "col": 12,
+        "row": 4,
+        "count": 1
+      },
+      {
+        "col": 13,
+        "row": 4,
+        "count": 12
+      },
+      {
+        "col": 18,
+        "row": 4,
+        "count": 1
+      },
+      {
+        "col": 19,
+        "row": 4,
+        "count": 23
+      },
+      {
+        "col": 20,
+        "row": 4,
+        "count": 14
+      },
+      {
+        "col": 21,
+        "row": 4,
+        "count": 8
+      },
+      {
+        "col": 22,
+        "row": 4,
+        "count": 2
+      },
+      {
+        "col": 23,
+        "row": 4,
+        "count": 2
+      },
+      {
+        "col": 24,
+        "row": 4,
+        "count": 1
+      },
+      {
+        "col": 25,
+        "row": 4,
+        "count": 1
+      },
+      {
+        "col": 10,
+        "row": 5,
+        "count": 4
+      },
+      {
+        "col": 11,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 12,
+        "row": 5,
+        "count": 4
+      },
+      {
+        "col": 17,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 18,
+        "row": 5,
+        "count": 7
+      },
+      {
+        "col": 19,
+        "row": 5,
+        "count": 7
+      },
+      {
+        "col": 20,
+        "row": 5,
+        "count": 6
+      },
+      {
+        "col": 21,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 23,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 24,
+        "row": 5,
+        "count": 2
+      },
+      {
+        "col": 25,
+        "row": 5,
+        "count": 1
+      },
+      {
+        "col": 10,
+        "row": 6,
+        "count": 2
+      },
+      {
+        "col": 11,
+        "row": 6,
+        "count": 4
+      },
+      {
+        "col": 12,
+        "row": 6,
+        "count": 1
+      },
+      {
+        "col": 14,
+        "row": 6,
+        "count": 2
+      },
+      {
+        "col": 15,
+        "row": 6,
+        "count": 2
+      },
+      {
+        "col": 16,
+        "row": 6,
+        "count": 3
+      },
+      {
+        "col": 17,
+        "row": 6,
+        "count": 7
+      },
+      {
+        "col": 18,
+        "row": 6,
+        "count": 3
+      },
+      {
+        "col": 19,
+        "row": 6,
+        "count": 1
+      },
+      {
+        "col": 20,
+        "row": 6,
+        "count": 19
+      },
+      {
+        "col": 21,
+        "row": 6,
+        "count": 10
+      },
+      {
+        "col": 22,
+        "row": 6,
+        "count": 6
+      },
+      {
+        "col": 23,
+        "row": 6,
+        "count": 1
+      },
+      {
+        "col": 24,
+        "row": 6,
+        "count": 13
+      },
+      {
+        "col": 25,
+        "row": 6,
+        "count": 1
+      },
+      {
+        "col": 9,
+        "row": 7,
+        "count": 4
+      },
+      {
+        "col": 10,
+        "row": 7,
+        "count": 1
+      },
+      {
+        "col": 12,
+        "row": 7,
+        "count": 1
+      },
+      {
+        "col": 13,
+        "row": 7,
+        "count": 6
+      },
+      {
+        "col": 14,
+        "row": 7,
+        "count": 4
+      },
+      {
+        "col": 15,
+        "row": 7,
+        "count": 5
+      },
+      {
+        "col": 16,
+        "row": 7,
+        "count": 6
+      },
+      {
+        "col": 17,
+        "row": 7,
+        "count": 2
+      },
+      {
+        "col": 19,
+        "row": 7,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 7,
+        "count": 12
+      },
+      {
+        "col": 24,
+        "row": 7,
+        "count": 1
+      },
+      {
+        "col": 25,
+        "row": 7,
+        "count": 1
+      },
+      {
+        "col": 7,
+        "row": 8,
+        "count": 3
+      },
+      {
+        "col": 8,
+        "row": 8,
+        "count": 4
+      },
+      {
+        "col": 11,
+        "row": 8,
+        "count": 2
+      },
+      {
+        "col": 12,
+        "row": 8,
+        "count": 1
+      },
+      {
+        "col": 18,
+        "row": 8,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 8,
+        "count": 13
+      },
+      {
+        "col": 24,
+        "row": 8,
+        "count": 1
+      },
+      {
+        "col": 25,
+        "row": 8,
+        "count": 1
+      },
+      {
+        "col": 6,
+        "row": 9,
+        "count": 2
+      },
+      {
+        "col": 7,
+        "row": 9,
+        "count": 13
+      },
+      {
+        "col": 8,
+        "row": 9,
+        "count": 5
+      },
+      {
+        "col": 9,
+        "row": 9,
+        "count": 2
+      },
+      {
+        "col": 10,
+        "row": 9,
+        "count": 4
+      },
+      {
+        "col": 11,
+        "row": 9,
+        "count": 1
+      },
+      {
+        "col": 18,
+        "row": 9,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 9,
+        "count": 9
+      },
+      {
+        "col": 24,
+        "row": 9,
+        "count": 2
+      },
+      {
+        "col": 25,
+        "row": 9,
+        "count": 1
+      },
+      {
+        "col": 9,
+        "row": 10,
+        "count": 8
+      },
+      {
+        "col": 18,
+        "row": 10,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 10,
+        "count": 4
+      },
+      {
+        "col": 25,
+        "row": 10,
+        "count": 2
+      },
+      {
+        "col": 18,
+        "row": 11,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 11,
+        "count": 3
+      },
+      {
+        "col": 25,
+        "row": 11,
+        "count": 2
+      },
+      {
+        "col": 18,
+        "row": 12,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 12,
+        "count": 5
+      },
+      {
+        "col": 24,
+        "row": 12,
+        "count": 3
+      },
+      {
+        "col": 18,
+        "row": 13,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 13,
+        "count": 5
+      },
+      {
+        "col": 24,
+        "row": 13,
+        "count": 3
+      },
+      {
+        "col": 18,
+        "row": 14,
+        "count": 1
+      },
+      {
+        "col": 19,
+        "row": 14,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 14,
+        "count": 3
+      },
+      {
+        "col": 24,
+        "row": 14,
+        "count": 4
+      },
+      {
+        "col": 19,
+        "row": 15,
+        "count": 2
+      },
+      {
+        "col": 23,
+        "row": 15,
+        "count": 2
+      },
+      {
+        "col": 24,
+        "row": 15,
+        "count": 14
+      },
+      {
+        "col": 19,
+        "row": 16,
+        "count": 1
+      },
+      {
+        "col": 20,
+        "row": 16,
+        "count": 1
+      },
+      {
+        "col": 23,
+        "row": 16,
+        "count": 2
+      },
+      {
+        "col": 24,
+        "row": 16,
+        "count": 5
+      },
+      {
+        "col": 20,
+        "row": 17,
+        "count": 3
+      },
+      {
+        "col": 21,
+        "row": 17,
+        "count": 2
+      },
+      {
+        "col": 23,
+        "row": 17,
+        "count": 13
+      }
+    ],
+    "dwell_by_element": [
+      {
+        "element": "div.txn-meta",
+        "dwell_ms": 3658
+      },
+      {
+        "element": "main.app-main",
+        "dwell_ms": 3573
+      },
+      {
+        "element": "section.greeting-bar",
+        "dwell_ms": 1688
+      },
+      {
+        "element": "section.quick-actions-section",
+        "dwell_ms": 1558
+      },
+      {
+        "element": "account-savings",
+        "dwell_ms": 1339
+      },
+      {
+        "element": "div.user-pill",
+        "dwell_ms": 833
+      },
+      {
+        "element": "div.app-nav-inner",
+        "dwell_ms": 726
+      },
+      {
+        "element": "txn-payroll",
+        "dwell_ms": 666
+      },
+      {
+        "element": "txn-starbucks",
+        "dwell_ms": 570
+      },
+      {
+        "element": "div.qa-icon",
+        "dwell_ms": 388
+      },
+      {
+        "element": "div.card-footer",
+        "dwell_ms": 348
+      },
+      {
+        "element": "account-credit",
+        "dwell_ms": 333
+      },
+      {
+        "element": "span.balance-amount",
+        "dwell_ms": 315
+      },
+      {
+        "element": "a.nav-link",
+        "dwell_ms": 309
+      },
+      {
+        "element": "button.icon-btn",
+        "dwell_ms": 291
+      },
+      {
+        "element": "account-checking",
+        "dwell_ms": 144
+      },
+      {
+        "element": "span.balance-change",
+        "dwell_ms": 143
+      },
+      {
+        "element": "div.card-label",
+        "dwell_ms": 131
+      },
+      {
+        "element": "btn-wire",
+        "dwell_ms": 127
+      },
+      {
+        "element": "h2.section-title",
+        "dwell_ms": 108
+      }
+    ],
+    "click_count": 2,
+    "clicks": [
+      {
+        "x": 1388,
+        "y": 40,
+        "t": 16390,
+        "target": "div.user-pill",
+        "button": 0
+      },
+      {
+        "x": 916,
+        "y": 162,
+        "t": 17675,
+        "target": "main.app-main",
+        "button": 0
+      }
+    ],
+    "scroll_event_count": 175,
+    "scroll_speed_mean": 1344.6406537767905,
+    "scroll_speed_max": 14533.332824707031,
+    "max_scroll_depth_px": 736.7999877929688,
+    "keystroke_count": 0,
+    "char_count": 0,
+    "typing_speed_cps": 0,
+    "key_dwell_mean_ms": null,
+    "key_dwell_std_ms": null,
+    "key_flight_mean_ms": null,
+    "key_flight_std_ms": null,
+    "keystrokes": [],
+    "total_idle_ms": 0,
+    "idle_ratio": 0,
+    "geolocation": {
+      "error": "Only secure origins are allowed (see: https://permanently-removed.invalid/Y0ZkNV)."
+    },
+    "fingerprint": {
+      "screen_width": 1536,
+      "screen_height": 864,
+      "viewport_width": 1528,
+      "viewport_height": 698,
+      "color_depth": 32,
+      "pixel_ratio": 1.25,
+      "timezone": "Asia/Calcutta",
+      "timezone_offset": -330,
+      "language": "en-US",
+      "languages": [
+        "en-US",
+        "en",
+        "en-IN"
+      ],
+      "platform": "Win32",
+      "hardware_concurrency": 16,
+      "touch_points": 0,
+      "cookie_enabled": true,
+      "do_not_track": null,
+      "online": true,
+      "plugins_count": 5,
+      "webgl_vendor": "Google Inc. (Intel)",
+      "webgl_renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000468B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "referrer": "http://192.168.31.35:5001/register",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0"
+    },
+    "client_timestamp": "2026-05-20T15:18:15.663Z",
+    "server_timestamp": "2026-05-20T15:18:15.684720",
+    "ip_address": "192.168.31.35",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0"
+  }
+]
