@@ -10,6 +10,62 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-prod")
 CORS(app)
 
+# ── ML Risk Scorer (lazy-loaded once) ─────────────────────────────────────────
+
+_risk_scorer = None
+_ml_available = False
+
+def _get_risk_scorer():
+    global _risk_scorer, _ml_available
+    if _risk_scorer is not None:
+        return _risk_scorer, _ml_available
+    try:
+        from ml.models import RiskScorer
+        _risk_scorer = RiskScorer()
+        _risk_scorer.load_models()
+        _ml_available = _risk_scorer._loaded
+    except Exception as e:
+        print(f"[ML] Could not load risk scorer: {e}")
+        _risk_scorer = None
+        _ml_available = False
+    return _risk_scorer, _ml_available
+
+
+def compute_session_risk_scores(behavior_records: list) -> dict:
+    """
+    Given a list of behavior records, group by session_id and compute
+    a risk score for each session using the most data-rich snapshot.
+
+    Returns a dict mapping session_id -> {score, level, breakdown, is_bot, is_anomaly}
+    """
+    scorer, available = _get_risk_scorer()
+    if not available or scorer is None:
+        return {}
+
+    from collections import defaultdict
+    by_session = defaultdict(list)
+    for rec in behavior_records:
+        sid = rec.get("session_id", "unknown")
+        by_session[sid].append(rec)
+
+    results = {}
+    for sid, records in by_session.items():
+        # Use the record with the most mouse samples (most data) for scoring
+        best = max(records, key=lambda r: r.get("mouse_sample_count") or 0)
+        # Also pass session username if available via session_id
+        try:
+            result = scorer.score(best, claimed_user_id=None)
+            results[sid] = {
+                "score": result["risk_score"],
+                "level": result["risk_level"],
+                "breakdown": result["breakdown"],
+                "is_bot": result["details"]["bot_detection"]["is_bot"],
+                "is_anomaly": result["details"]["anomaly_detection"]["is_anomaly"],
+            }
+        except Exception as e:
+            print(f"[ML] Scoring failed for session {sid[:12]}: {e}")
+    return results
+
 BASE = os.path.dirname(__file__)
 LOG_FILE      = os.path.join(BASE, "logs", "captured.csv")
 BEHAVIOR_FILE = os.path.join(BASE, "logs", "behavior.json")
@@ -352,6 +408,9 @@ def dashboard():
     behavior = list(reversed(read_behavior()))
     users    = load_users()
 
+    # Compute ML risk scores per session (keyed by session_id)
+    risk_scores = compute_session_risk_scores(read_behavior())
+
     stats = {
         "total":             len(logs),
         "unique_ips":        len(set(r.get("ip_address", "") for r in logs)),
@@ -360,13 +419,17 @@ def dashboard():
         "registered_users":  len(users),
         "failed_logins":     sum(1 for r in logs if r.get("result") == "failed"),
         "success_logins":    sum(1 for r in logs if r.get("result") == "success"),
+        "ml_available":      bool(risk_scores),
+        "high_risk_sessions": sum(
+            1 for v in risk_scores.values() if v["level"] in ("high", "critical")
+        ),
     }
     for row in logs:
         at = row.get("account_type", "unknown")
         stats["account_types"][at] = stats["account_types"].get(at, 0) + 1
 
     return render_template("dashboard.html", logs=logs, stats=stats,
-                           behavior=behavior, users=users)
+                           behavior=behavior, users=users, risk_scores=risk_scores)
 
 
 @app.route("/dashboard/export/credentials")

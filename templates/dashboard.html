@@ -138,7 +138,7 @@
     <!-- ── BEHAVIORAL TAB ── -->
     <div id="tab-behavior" style="display:none;">
 
-      <div class="stats-row">
+      <div class="stats-row" style="grid-template-columns:repeat(6,1fr);">
         <div class="stat-card">
           <div class="stat-label">Behavior Sessions</div>
           <div class="stat-value">{{ stats.behavior_sessions }}</div>
@@ -159,6 +159,18 @@
           <div class="stat-value">{{ behavior | selectattr('geolocation') | selectattr('geolocation.latitude', 'defined') | list | length if behavior else 0 }}</div>
           <div class="stat-sub">Browser GPS permitted</div>
         </div>
+        <div class="stat-card">
+          <div class="stat-label">⚠️ High Risk</div>
+          <div class="stat-value" style="color:#f87171;">{{ stats.high_risk_sessions or 0 }}</div>
+          <div class="stat-sub">High / Critical sessions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">🤖 ML Engine</div>
+          <div class="stat-value" style="font-size:1rem;{% if stats.ml_available %}color:#34d399;{% else %}color:#64748b;{% endif %}">
+            {{ 'Active' if stats.ml_available else 'Offline' }}
+          </div>
+          <div class="stat-sub">Behavioral risk scoring</div>
+        </div>
       </div>
 
       {% if behavior %}
@@ -174,6 +186,15 @@
             <span class="dim-text">Page: <strong style="color:#f1f5f9;">{{ session.page or '—' }}</strong></span>
             <span class="dim-text">Duration: <strong style="color:#f5c518;">{{ ((session.session_duration_ms or 0) / 1000) | round(1) }}s</strong></span>
             <span class="dim-text">Session: <span class="mono" style="color:#94a3b8;font-size:0.75rem;">{{ (session.session_id or '')[:12] }}…</span></span>
+            {% if session.session_id and risk_scores and session.session_id in risk_scores %}
+            {% set rs = risk_scores[session.session_id] %}
+            <span class="risk-badge risk-{{ rs.level }}" title="Bot: {{ (rs.breakdown.bot_score * 100) | round(0) | int }}%  Anomaly: {{ (rs.breakdown.anomaly_score * 100) | round(0) | int }}%  Rules: {{ (rs.breakdown.rule_flags * 100) | round(0) | int }}%">
+              🎯 Risk {{ rs.score }}/100
+              <span class="risk-level-label">{{ rs.level | upper }}</span>
+              {% if rs.is_bot %}<span class="risk-flag">BOT</span>{% endif %}
+              {% if rs.is_anomaly %}<span class="risk-flag">ANOMALY</span>{% endif %}
+            </span>
+            {% endif %}
           </div>
           <div style="display:flex;align-items:center;gap:0.75rem;">
             {% if session.session_id %}
@@ -191,6 +212,50 @@
 
         <div class="behavior-body" style="display:none;">
           <div class="behavior-grid">
+
+            <!-- ML Risk Score -->
+            {% if session.session_id and risk_scores and session.session_id in risk_scores %}
+            {% set rs = risk_scores[session.session_id] %}
+            <div class="bsection risk-panel risk-panel-{{ rs.level }}" style="grid-column: span 2;">
+              <div class="bsection-title">🤖 ML Risk Assessment</div>
+              <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:0.7rem;">
+                <div class="risk-score-circle risk-circle-{{ rs.level }}">
+                  <span class="risk-score-number">{{ rs.score }}</span>
+                  <span class="risk-score-denom">/100</span>
+                </div>
+                <div>
+                  <div style="font-size:1.1rem;font-weight:700;color:var(--risk-color-{{ rs.level }});">{{ rs.level | upper }}</div>
+                  <div style="font-size:0.75rem;color:#64748b;margin-top:0.2rem;">
+                    {% if rs.is_bot %}<span class="risk-flag-lg">🤖 BOT DETECTED</span>{% endif %}
+                    {% if rs.is_anomaly %}<span class="risk-flag-lg" style="margin-left:0.5rem;">⚠️ ANOMALY</span>{% endif %}
+                    {% if not rs.is_bot and not rs.is_anomaly %}<span style="color:#34d399;">✓ Normal human behaviour</span>{% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="risk-breakdown-bars">
+                <div class="risk-bar-row">
+                  <span class="risk-bar-label">Bot Score</span>
+                  <div class="risk-bar-track"><div class="risk-bar-fill" style="width:{{ (rs.breakdown.bot_score * 100) | round(0) | int }}%;background:#f87171;"></div></div>
+                  <span class="risk-bar-val">{{ (rs.breakdown.bot_score * 100) | round(1) }}%</span>
+                </div>
+                <div class="risk-bar-row">
+                  <span class="risk-bar-label">Anomaly Score</span>
+                  <div class="risk-bar-track"><div class="risk-bar-fill" style="width:{{ (rs.breakdown.anomaly_score * 100) | round(0) | int }}%;background:#fbbf24;"></div></div>
+                  <span class="risk-bar-val">{{ (rs.breakdown.anomaly_score * 100) | round(1) }}%</span>
+                </div>
+                <div class="risk-bar-row">
+                  <span class="risk-bar-label">Identity Mismatch</span>
+                  <div class="risk-bar-track"><div class="risk-bar-fill" style="width:{{ (rs.breakdown.identity_mismatch * 100) | round(0) | int }}%;background:#a78bfa;"></div></div>
+                  <span class="risk-bar-val">{{ (rs.breakdown.identity_mismatch * 100) | round(1) }}%</span>
+                </div>
+                <div class="risk-bar-row">
+                  <span class="risk-bar-label">Rule Flags</span>
+                  <div class="risk-bar-track"><div class="risk-bar-fill" style="width:{{ (rs.breakdown.rule_flags * 100) | round(0) | int }}%;background:#fb923c;"></div></div>
+                  <span class="risk-bar-val">{{ (rs.breakdown.rule_flags * 100) | round(1) }}%</span>
+                </div>
+              </div>
+            </div>
+            {% endif %}
 
             <!-- Mouse -->
             <div class="bsection">
@@ -364,6 +429,64 @@
     @media (max-width: 1100px) {
       .behavior-grid { grid-template-columns: repeat(2, 1fr); }
     }
+
+    /* ── Risk Score CSS Variables ── */
+    :root {
+      --risk-color-low: #34d399;
+      --risk-color-medium: #fbbf24;
+      --risk-color-high: #f87171;
+      --risk-color-critical: #f43f5e;
+    }
+
+    /* ── Risk badge in card header ── */
+    .risk-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.72rem; font-weight: 700; padding: 0.22rem 0.65rem;
+      border-radius: 6px; letter-spacing: 0.03em; white-space: nowrap;
+      cursor: default;
+    }
+    .risk-low     { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+    .risk-medium  { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+    .risk-high    { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.35); }
+    .risk-critical{ background: rgba(244,63,94,0.18); color: #f43f5e; border: 1px solid rgba(244,63,94,0.4); }
+    .risk-level-label { font-size: 0.65rem; opacity: 0.8; }
+    .risk-flag {
+      font-size: 0.6rem; font-weight: 800; padding: 0.1rem 0.35rem;
+      border-radius: 3px; background: rgba(255,255,255,0.1);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Risk panel inside expanded body ── */
+    .risk-panel { border-left: 3px solid; }
+    .risk-panel-low      { border-left-color: #34d399; }
+    .risk-panel-medium   { border-left-color: #fbbf24; }
+    .risk-panel-high     { border-left-color: #f87171; }
+    .risk-panel-critical { border-left-color: #f43f5e; }
+
+    .risk-score-circle {
+      display: flex; align-items: baseline; justify-content: center;
+      gap: 0.15rem; padding: 0.5rem 0.9rem; border-radius: 8px;
+      border: 2px solid; min-width: 80px;
+    }
+    .risk-circle-low      { border-color: #34d399; background: rgba(52,211,153,0.08); }
+    .risk-circle-medium   { border-color: #fbbf24; background: rgba(251,191,36,0.08); }
+    .risk-circle-high     { border-color: #f87171; background: rgba(248,113,113,0.08); }
+    .risk-circle-critical { border-color: #f43f5e; background: rgba(244,63,94,0.1); }
+    .risk-score-number { font-size: 2rem; font-weight: 800; line-height: 1; color: #f1f5f9; }
+    .risk-score-denom  { font-size: 0.75rem; color: #64748b; }
+
+    .risk-flag-lg {
+      font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.5rem;
+      border-radius: 4px; background: rgba(248,113,113,0.15); color: #f87171;
+      border: 1px solid rgba(248,113,113,0.3);
+    }
+
+    .risk-breakdown-bars { display: flex; flex-direction: column; gap: 0.45rem; }
+    .risk-bar-row { display: grid; grid-template-columns: 130px 1fr 55px; align-items: center; gap: 0.75rem; }
+    .risk-bar-label { font-size: 0.75rem; color: #64748b; }
+    .risk-bar-track { background: #1e293b; border-radius: 4px; height: 7px; overflow: hidden; }
+    .risk-bar-fill  { height: 100%; border-radius: 4px; min-width: 2px; transition: width 0.4s ease; }
+    .risk-bar-val   { font-size: 0.72rem; color: #94a3b8; text-align: right; font-family: 'JetBrains Mono', monospace; }
   </style>
 
   <script>
