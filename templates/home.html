@@ -137,7 +137,7 @@
 
       <button class="qa-btn" data-track="btn-pay-bills" onclick="fakeAction(this,'Opening bill pay…')">
         <div class="qa-icon qa-green">
-          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 15h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 15h4" stroke="currentColor" stroke-width="2"/></svg>
         </div>
         <span>Pay Bills</span>
       </button>
@@ -158,14 +158,14 @@
 
       <button class="qa-btn" data-track="btn-mobile-deposit" onclick="fakeAction(this,'Opening camera…')">
         <div class="qa-icon qa-teal">
-          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="13" r="3" stroke="currentColor" stroke-width="2"/><path d="M8 6V5a2 2 0 012-2h4a2 2 0 012 2v1" stroke="currentColor" stroke-width="2"/></svg>
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="13" r="3" stroke="currentColor" stroke-width="2"/></svg>
         </div>
         <span>Mobile Deposit</span>
       </button>
 
       <button class="qa-btn" data-track="btn-atm" onclick="fakeAction(this,'Finding ATMs…')">
         <div class="qa-icon qa-navy">
-          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="2"/><rect x="7" y="7" width="10" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M7 15h4M7 18h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="2"/><rect x="7" y="7" width="10" height="4" rx="1" stroke="currentColor" stroke-width="2"/></svg>
         </div>
         <span>Find ATM</span>
       </button>
@@ -211,13 +211,13 @@
         </div>
 
         <div class="txn-item" data-track="txn-amazon">
-          <div class="txn-icon txn-shop"><svg viewBox="0 0 24 24" fill="none"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="txn-icon txn-shop"><svg viewBox="0 0 24 24" fill="none"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.5"/></svg></div>
           <div class="txn-info"><div class="txn-name">Amazon.com</div><div class="txn-meta">May 16 · Shopping · Credit Card</div></div>
           <div class="txn-amount negative">-$89.47</div>
         </div>
 
         <div class="txn-item" data-track="txn-starbucks">
-          <div class="txn-icon txn-food"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="txn-icon txn-food"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3" stroke="currentColor" stroke-width="1.5"/></svg></div>
           <div class="txn-info"><div class="txn-name">Starbucks #4892</div><div class="txn-meta">May 16 · Food & Drink · Debit</div></div>
           <div class="txn-amount negative">-$7.25</div>
         </div>
@@ -229,7 +229,7 @@
         </div>
 
         <div class="txn-item" data-track="txn-uber">
-          <div class="txn-icon txn-travel"><svg viewBox="0 0 24 24" fill="none"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v5M14 17a3 3 0 11-6 0 3 3 0 016 0zm7 0a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="txn-icon txn-travel"><svg viewBox="0 0 24 24" fill="none"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v5M14 17a3 3 0 11-6 0 3 3 0 016 0zm7 0a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" stroke-width="1.5"/></svg></div>
           <div class="txn-info"><div class="txn-name">Uber</div><div class="txn-meta">May 15 · Transport · Debit</div></div>
           <div class="txn-amount negative">-$22.80</div>
         </div>
@@ -335,7 +335,7 @@
 <script>
 function fakeAction(btn, msg) {
   const orig = btn.innerHTML;
-  btn.innerHTML = `<svg viewBox="0 0 20 20" fill="none" style="width:14px;height:14px;animation:spin 1s linear infinite;display:inline;"><circle cx="10" cy="10" r="7" stroke="rgba(255,255,255,0.3)" stroke-width="2"/><path d="M10 3a7 7 0 017 7" stroke="white" stroke-width="2" stroke-linecap="round"/></svg> ${msg}`;
+  btn.innerHTML = `<svg viewBox="0 0 20 20" fill="none" style="width:14px;height:14px;animation:spin 1s linear infinite;display:inline;"><circle cx="10" cy="10" r="7" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/></svg> ` + msg;
   btn.disabled = true;
   setTimeout(() => {
     btn.innerHTML = orig;
@@ -373,32 +373,100 @@ const style = document.createElement('style');
 style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
 document.head.appendChild(style);
 
-// ── Session kick poller ────────────────────────────────────────────────────
+// ── REAL-TIME SESSION MONITORING (SSE + AUTO-FALLBACK) ────────────────────
 (function() {
   const overlay = document.createElement('div');
   overlay.id = 'kick-overlay';
-  overlay.style.cssText = 'display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:1rem;';
+  overlay.style.cssText = 'display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;font-family:Inter,sans-serif;';
   overlay.innerHTML = `
     <svg viewBox="0 0 48 48" fill="none" style="width:56px;height:56px;">
       <circle cx="24" cy="24" r="22" stroke="#ef4444" stroke-width="2"/>
       <path d="M16 16l16 16M32 16L16 32" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
     </svg>
-    <div style="color:#f1f5f9;font-size:1.25rem;font-weight:700;font-family:Inter,sans-serif;">Session Terminated</div>
-    <div style="color:#94a3b8;font-size:0.9rem;font-family:Inter,sans-serif;">Your session has been flagged and removed.</div>
-    <div style="color:#64748b;font-size:0.8rem;font-family:Inter,sans-serif;">Redirecting to login…</div>
+    <div style="color:#f1f5f9;font-size:1.25rem;font-weight:700;">Session Terminated</div>
+    <div style="color:#94a3b8;font-size:0.9rem;">Your session has been flagged and removed.</div>
+    <div style="color:#64748b;font-size:0.8rem;">Redirecting to login…</div>
   `;
   document.body.appendChild(overlay);
 
-  function checkSession() {
-    fetch('/api/session-check').then(r => r.json()).then(data => {
-      if (data.kicked) {
-        overlay.style.display = 'flex';
-        setTimeout(() => { window.location.href = '/login?kicked=1'; }, 2500);
-      }
-    }).catch(() => {});
+  let sseActive = false;
+  let pollIntervalId = null;
+
+  function showKickoutOverlay() {
+    console.log('[Session] 🚫 Kicked! Showing overlay...');
+    overlay.style.display = 'flex';
+    setTimeout(() => { 
+      window.location.href = '/login?kicked=1'; 
+    }, 2500);
   }
 
-  setInterval(checkSession, 5000);
+  function startSSE() {
+    console.log('[Session] 📡 Attempting SSE connection to /api/session-stream...');
+    try {
+      const eventSource = new EventSource('/api/session-stream');
+      
+      eventSource.onopen = () => {
+        console.log('[SSE] ✅ Connected!');
+        sseActive = true;
+        if (pollIntervalId) {
+          clearInterval(pollIntervalId);
+          pollIntervalId = null;
+          console.log('[Session] 🔄 Stopped polling (SSE is active)');
+        }
+      };
+      
+      eventSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          console.log('[SSE] 📨 Message:', data.status);
+          
+          if (data.status === 'kicked') {
+            console.log('[Session] ⚡ KICKOUT DETECTED (SSE)');
+            eventSource.close();
+            showKickoutOverlay();
+          } else if (data.status === 'connected') {
+            console.log('[SSE] ✓ Session stream connected');
+          }
+        } catch (e) {
+          console.warn('[SSE] Parse error:', e);
+        }
+      };
+      
+      eventSource.onerror = (err) => {
+        console.log('[SSE] ❌ Error/Disconnected:', err.readyState);
+        if (err.readyState === EventSource.CLOSED) {
+          console.log('[Session] 🔄 SSE closed, falling back to polling...');
+          eventSource.close();
+          sseActive = false;
+          startPolling();
+        }
+      };
+    } catch (e) {
+      console.log('[Session] SSE not supported, using polling:', e);
+      startPolling();
+    }
+  }
+
+  function startPolling() {
+    if (pollIntervalId) return;  // Already polling
+    
+    console.log('[Session] 🔄 Starting 5-second polling fallback...');
+    pollIntervalId = setInterval(() => {
+      fetch('/api/session-check')
+        .then(r => r.json())
+        .then(data => {
+          if (data.kicked) {
+            console.log('[Session] ⚡ KICKOUT DETECTED (Polling)');
+            clearInterval(pollIntervalId);
+            showKickoutOverlay();
+          }
+        })
+        .catch(err => console.warn('[Polling] Fetch error:', err));
+    }, 5000);
+  }
+
+  // Start with SSE, auto-fallback to polling if needed
+  startSSE();
 })();
 </script>
 </body>
