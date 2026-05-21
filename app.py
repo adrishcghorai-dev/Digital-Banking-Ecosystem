@@ -73,6 +73,10 @@ USERS_FILE    = os.path.join(BASE, "logs", "users.json")
 KICKED_FILE   = os.path.join(BASE, "logs", "kicked.json")
 ADMIN_TOKEN   = os.environ.get("ADMIN_TOKEN", "admin123")
 
+# ── SSE Connections (store active client connections) ─────────────────────────
+# Maps session_id -> list of generator functions that yield SSE messages
+_sse_clients = {}
+_sse_clients_lock = __import__('threading').Lock()
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -185,7 +189,7 @@ def append_behavior(record: dict):
         json.dump(records, f, indent=2)
 
 
-# ── Routes ────────────────────────────────────────────────────────────────────
+# ── Routes ───────────────────────────────────────────────────────────────────
 
 @app.route("/", methods=["GET"])
 def index():
@@ -387,10 +391,87 @@ def kick_session():
     kicked = load_kicked()
     kicked.add(sid)
     save_kicked(kicked)
+    
+    # ── BROADCAST KICK EVENT TO SSE CLIENTS ──────────────────────────────────
+    _broadcast_kick_event(sid)
+    
     return jsonify({"status": "kicked", "session_id": sid})
 
 
-# ── Admin dashboard ───────────────────────────────────────────────────────────
+def _broadcast_kick_event(sid: str):
+    """Send kick notification to all SSE clients listening for this session."""
+    with _sse_clients_lock:
+        if sid in _sse_clients:
+            # Remove this client's generators (they should detect the kick next poll)
+            del _sse_clients[sid]
+
+
+@app.route("/api/session-stream", methods=["GET"])
+def session_stream():
+    """
+    Server-Sent Events endpoint for real-time session status.
+    Client connects here and receives instant updates when session is kicked.
+    """
+    sid = request.cookies.get("session", "none")
+    
+    # Verify the user is authenticated
+    if not session.get("username"):
+        return "Unauthorized", 401
+    
+    def event_generator():
+        """Generate SSE events for this session."""
+        # Check if already kicked before subscribing
+        if is_kicked(sid):
+            yield f"data: {json.dumps({'status': 'kicked'})}\n\n"
+            return
+        
+        # Register this client as active
+        with _sse_clients_lock:
+            if sid not in _sse_clients:
+                _sse_clients[sid] = []
+        
+        try:
+            # Send initial "connected" event
+            yield f"data: {json.dumps({'status': 'connected'})}\n\n"
+            
+            # Keep connection alive and check for kicks periodically
+            import time
+            consecutive_checks = 0
+            while True:
+                time.sleep(2)  # Check every 2 seconds (keep-alive + responsiveness)
+                
+                # Check if session has been kicked
+                if is_kicked(sid):
+                    yield f"data: {json.dumps({'status': 'kicked'})}\n\n"
+                    break
+                
+                # Send heartbeat to keep connection alive
+                consecutive_checks += 1
+                yield f": heartbeat {consecutive_checks}\n\n"
+                
+        except GeneratorExit:
+            # Client disconnected
+            with _sse_clients_lock:
+                if sid in _sse_clients and event_generator in _sse_clients[sid]:
+                    _sse_clients[sid].remove(event_generator)
+        finally:
+            # Cleanup
+            with _sse_clients_lock:
+                if sid in _sse_clients and len(_sse_clients[sid]) == 0:
+                    del _sse_clients[sid]
+    
+    return app.response_class(
+        event_generator(),
+        mimetype="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        }
+    )
+
+
+# ── Admin dashboard ──────────────────────────────────────────────────────────
 
 @app.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
