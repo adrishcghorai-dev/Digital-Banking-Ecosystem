@@ -113,13 +113,31 @@ def analyze_batch():
 
         results = []
         for rec in records:
-            result = scorer.score(rec, claimed_user_id=claimed_user)
-            results.append({
-                "risk_score": result["risk_score"],
-                "risk_level": result["risk_level"],
-                "is_bot": result["details"]["bot_detection"]["is_bot"],
-                "is_anomaly": result["details"]["anomaly_detection"]["is_anomaly"],
-            })
+            try:
+                result = scorer.score(rec, claimed_user_id=claimed_user)
+                results.append({
+                    "risk_score":      result["risk_score"],
+                    "risk_level":      result["risk_level"],
+                    "is_bot":          result["details"]["bot_detection"]["is_bot"],
+                    "bot_confidence":  result["details"]["bot_detection"]["confidence"],
+                    "is_anomaly":      result["details"]["anomaly_detection"]["is_anomaly"],
+                    "anomaly_score":   result["details"]["anomaly_detection"]["anomaly_score"],
+                    "breakdown":       result["breakdown"],
+                    "error":           None,
+                })
+            except Exception as rec_err:
+                # Isolate bad records — don't crash the entire batch
+                results.append({
+                    "risk_score":    0,
+                    "risk_level":    "low",
+                    "is_bot":        False,
+                    "bot_confidence": 0.0,
+                    "is_anomaly":    False,
+                    "anomaly_score": 0.0,
+                    "breakdown":     {"bot_score": 0, "anomaly_score": 0,
+                                      "identity_mismatch": 0, "rule_flags": 0},
+                    "error":         str(rec_err),
+                })
 
         return jsonify({"results": results, "count": len(results)})
 

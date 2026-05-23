@@ -1,0 +1,2206 @@
+{
+  "timestamp": "2026-05-23 14:05:15",
+  "total_samples_tested": 50,
+  "results": [
+    {
+      "index": 0,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.38,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.127,
+        "anomaly_percent": 65.3622330899504,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 40,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0038,
+          "anomaly_score": 0.6536,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0038
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.127
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 1,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1283,
+        "anomaly_percent": 65.50924589006638,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 40,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6551,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1283
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 2,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.6799999999999999,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0987,
+        "anomaly_percent": 62.09305956033603,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 39,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0068,
+          "anomaly_score": 0.6209,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0068
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0987
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 3,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 100.0,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0889,
+        "anomaly_percent": 60.93307667451868,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 80,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 1.0,
+          "anomaly_score": 0.6093,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 1.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0889
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 4,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1477,
+        "anomaly_percent": 67.66677604923481,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 40,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6767,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1477
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 5,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0548,
+        "anomaly_percent": 43.19253656434116,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 33,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4319,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0548
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 6,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 100.0,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0965,
+        "anomaly_percent": 61.833803933028285,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 80,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 1.0,
+          "anomaly_score": 0.6183,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 1.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0965
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 7,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 5.38,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0072,
+        "anomaly_percent": 49.100097187404536,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 39,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0538,
+          "anomaly_score": 0.491,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0538
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0072
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 8,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.64,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0059,
+        "anomaly_percent": 49.26255347946053,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 35,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0064,
+          "anomaly_score": 0.4926,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0064
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0059
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 9,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 100.0,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0811,
+        "anomaly_percent": 60.00083740248211,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 81,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 1.0,
+          "anomaly_score": 0.6,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.3333
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 1.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0811
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 10,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.38,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1331,
+        "anomaly_percent": 66.04948027841371,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 40,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0038,
+          "anomaly_score": 0.6605,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0038
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1331
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 11,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0262,
+        "anomaly_percent": 46.72967549945593,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 34,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4673,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0262
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 12,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 95.57,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0896,
+        "anomaly_percent": 61.01636109428106,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 78,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 0.9557,
+          "anomaly_score": 0.6102,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 0.9557
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0896
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 13,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 100.0,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0764,
+        "anomaly_percent": 59.43553879072982,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 79,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 1.0,
+          "anomaly_score": 0.5944,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 1.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0764
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 14,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1487,
+        "anomaly_percent": 67.77607352603087,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 42,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6778,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1487
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 15,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0387,
+        "anomaly_percent": 45.17753760536198,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 34,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4518,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0387
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 16,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.6,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1147,
+        "anomaly_percent": 63.95703890186317,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 39,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.006,
+          "anomaly_score": 0.6396,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.006
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1147
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 17,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 99.5,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0781,
+        "anomaly_percent": 59.640305832094256,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 78,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 0.995,
+          "anomaly_score": 0.5964,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 0.995
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0781
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 18,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.037,
+        "anomaly_percent": 45.38814589542204,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 34,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4539,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.037
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 19,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0423,
+        "anomaly_percent": 44.732122377020744,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 33,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4473,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0423
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 20,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1171,
+        "anomaly_percent": 64.23319719354026,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 39,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6423,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1171
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 21,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 100.0,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0845,
+        "anomaly_percent": 60.40813228693781,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 81,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 1.0,
+          "anomaly_score": 0.6041,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.3333
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 1.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0845
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 22,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0121,
+        "anomaly_percent": 48.4879611752095,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 35,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4849,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0121
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 23,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.077,
+        "anomaly_percent": 40.492152613386594,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 32,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4049,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.077
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 24,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0471,
+        "anomaly_percent": 44.13956011896252,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 33,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4414,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0471
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 25,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1397,
+        "anomaly_percent": 66.78551189983057,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 40,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6679,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1397
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 26,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.015,
+        "anomaly_percent": 48.12587841214648,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 34,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4813,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.015
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 27,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1382,
+        "anomaly_percent": 66.61893447984704,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 40,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6662,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1382
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 28,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0259,
+        "anomaly_percent": 46.76701689889675,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 34,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4677,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0259
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 29,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.115,
+        "anomaly_percent": 63.99160967377341,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 39,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6399,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.115
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 30,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 100.0,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0989,
+        "anomaly_percent": 62.11659429141045,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 80,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 1.0,
+          "anomaly_score": 0.6212,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 1.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0989
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 31,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1211,
+        "anomaly_percent": 64.6913609141316,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 39,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6469,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1211
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 32,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0623,
+        "anomaly_percent": 42.274864817213285,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 33,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4227,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0623
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 33,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1419,
+        "anomaly_percent": 67.02906686748939,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 40,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6703,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1419
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 34,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0677,
+        "anomaly_percent": 41.61738909503303,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 32,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4162,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0677
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 35,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0923,
+        "anomaly_percent": 61.33699574541155,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 38,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6134,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0923
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 36,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0268,
+        "anomaly_percent": 46.655003732157226,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 34,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4666,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0268
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 37,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.034,
+        "anomaly_percent": 45.76020592256489,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 34,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4576,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.034
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 38,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 100.0,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0825,
+        "anomaly_percent": 60.168718018285674,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 80,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 1.0,
+          "anomaly_score": 0.6017,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 1.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0825
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 39,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1239,
+        "anomaly_percent": 65.01048228405068,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 40,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6501,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1239
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 40,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 100.0,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0727,
+        "anomaly_percent": 58.98874205417383,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 79,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 1.0,
+          "anomaly_score": 0.5899,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 1.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0727
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 41,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1092,
+        "anomaly_percent": 63.320706348158474,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 39,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6332,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1092
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 42,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1372,
+        "anomaly_percent": 66.50765169077934,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 42,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6651,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1372
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 43,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1406,
+        "anomaly_percent": 66.88525748543954,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 40,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.6689,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1406
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 44,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 100.0,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0774,
+        "anomaly_percent": 59.55603022501242,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 80,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 1.0,
+          "anomaly_score": 0.5956,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 1.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0774
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 45,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 100.0,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0883,
+        "anomaly_percent": 60.86163926214265,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 78,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 1.0,
+          "anomaly_score": 0.6086,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 1.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0883
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 46,
+      "bot_detector": {
+        "is_bot": true,
+        "confidence": 97.8,
+        "status": "BOT DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0858,
+        "anomaly_percent": 60.56348524009999,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 79,
+        "risk_level": "critical",
+        "breakdown": {
+          "bot_score": 0.978,
+          "anomaly_score": 0.6056,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": true,
+            "confidence": 0.978
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0858
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 47,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.43,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.1126,
+        "anomaly_percent": 63.71463978380469,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 41,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0043,
+          "anomaly_score": 0.6371,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.1667
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0043
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.1126
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 48,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": false,
+        "anomaly_score": 0.0658,
+        "anomaly_percent": 41.8483958437125,
+        "status": "NORMAL"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 33,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.4185,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": false,
+            "anomaly_score": 0.0658
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    },
+    {
+      "index": 49,
+      "bot_detector": {
+        "is_bot": false,
+        "confidence": 0.0,
+        "status": "HUMAN DETECTED"
+      },
+      "anomaly_detector": {
+        "is_anomaly": true,
+        "anomaly_score": -0.0574,
+        "anomaly_percent": 57.126152514518616,
+        "status": "ANOMALY DETECTED"
+      },
+      "user_verifier": {
+        "is_verified": false,
+        "similarity_score": 0.0,
+        "status": "IDENTITY MISMATCH"
+      },
+      "risk_scorer": {
+        "risk_score": 37,
+        "risk_level": "medium",
+        "breakdown": {
+          "bot_score": 0.0,
+          "anomaly_score": 0.5713,
+          "identity_mismatch": 1.0,
+          "rule_flags": 0.0
+        },
+        "details": {
+          "bot_detection": {
+            "is_bot": false,
+            "confidence": 0.0
+          },
+          "anomaly_detection": {
+            "is_anomaly": true,
+            "anomaly_score": -0.0574
+          },
+          "identity_verification": {
+            "is_verified": false,
+            "similarity_score": 0.0,
+            "reason": "No model for user 'user_001'"
+          }
+        }
+      }
+    }
+  ]
+}

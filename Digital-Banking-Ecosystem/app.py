@@ -41,8 +41,13 @@ def load_kicked() -> set:
     ensure_dirs()
     if not os.path.exists(KICKED_FILE):
         return set()
-    with open(KICKED_FILE, "r") as f:
-        return set(json.load(f))
+    try:
+        with open(KICKED_FILE, "r") as f:
+            return set(json.load(f))
+    except (json.JSONDecodeError, ValueError):
+        print("[WARN] kicked.json corrupted – resetting.")
+        save_kicked(set())
+        return set()
 
 def save_kicked(kicked: set):
     with open(KICKED_FILE, "w") as f:
@@ -59,8 +64,14 @@ def load_users() -> dict:
     if not os.path.exists(USERS_FILE):
         with open(USERS_FILE, "w") as f:
             json.dump({}, f)
-    with open(USERS_FILE, "r") as f:
-        return json.load(f)
+    try:
+        with open(USERS_FILE, "r") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, ValueError):
+        print("[WARN] users.json corrupted – resetting.")
+        with open(USERS_FILE, "w") as f:
+            json.dump({}, f)
+        return {}
 
 def save_users(users: dict):
     with open(USERS_FILE, "w") as f:
@@ -112,8 +123,12 @@ def log_attempt(data: dict):
 
 def read_logs():
     ensure_log_file()
-    with open(LOG_FILE, "r", newline="") as f:
-        return [dict(r) for r in csv.DictReader(f)]
+    try:
+        with open(LOG_FILE, "r", newline="") as f:
+            return [dict(r) for r in csv.DictReader(f)]
+    except Exception as e:
+        print(f"[WARN] captured.csv error: {e}")
+        return []
 
 
 # ── Behavioral log (behavior.json) ────────────────────────────────────────────
@@ -126,8 +141,15 @@ def ensure_behavior_file():
 
 def read_behavior():
     ensure_behavior_file()
-    with open(BEHAVIOR_FILE, "r") as f:
-        return json.load(f)
+    try:
+        with open(BEHAVIOR_FILE, "r") as f:
+            data = json.load(f)
+            return data if isinstance(data, list) else []
+    except (json.JSONDecodeError, ValueError):
+        print("[WARN] behavior.json corrupted – resetting.")
+        with open(BEHAVIOR_FILE, "w") as f:
+            json.dump([], f)
+        return []
 
 def append_behavior(record: dict):
     ensure_behavior_file()
@@ -430,6 +452,24 @@ def export_behavior():
     )
 
 
+# ── Plain JSON APIs for dashboard JS (no attachment header) ───────────────────
+
+@app.route("/api/behavior", methods=["GET"])
+def api_behavior():
+    """Return behavior.json as plain JSON for dashboard JS consumption."""
+    if not session.get("admin"):
+        return jsonify({"error": "Unauthorized"}), 403
+    return jsonify(read_behavior())
+
+
+@app.route("/api/credentials", methods=["GET"])
+def api_credentials():
+    """Return captured credentials as plain JSON for dashboard JS."""
+    if not session.get("admin"):
+        return jsonify({"error": "Unauthorized"}), 403
+    return jsonify(read_logs())
+
+
 @app.route("/dashboard/export/users")
 def export_users():
     if not session.get("admin"):
@@ -459,6 +499,97 @@ def clear_logs():
 def dashboard_logout():
     session.pop("admin", None)
     return redirect(url_for("dashboard"))
+
+
+# ── Hacker Bot API ────────────────────────────────────────────────────────────
+
+HACKER_BOT_RESULTS_FILE = os.path.join(BASE, "hacker_bot_results.json")
+
+
+@app.route("/api/hacker-bot/results", methods=["GET"])
+def hacker_bot_results():
+    """Serve the latest hacker_bot_results.json to the dashboard."""
+    if not session.get("admin"):
+        return jsonify({"error": "Unauthorized"}), 403
+    if not os.path.exists(HACKER_BOT_RESULTS_FILE):
+        return jsonify({"error": "No results file found. Run the hacker bot first."}), 404
+    try:
+        with open(HACKER_BOT_RESULTS_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return jsonify(data)
+    except (json.JSONDecodeError, ValueError) as e:
+        return jsonify({"error": f"Results file corrupted: {e}"}), 500
+
+
+@app.route("/api/hacker-bot/inject", methods=["POST"])
+def hacker_bot_inject():
+    """
+    Accept synthetic behavior records from the hacker bot and append them
+    to behavior.json so they appear in the Behavioral Biometrics tab.
+    Each injected record is tagged with source='hacker_bot'.
+    """
+    if not session.get("admin"):
+        return jsonify({"error": "Unauthorized"}), 403
+    try:
+        payload = request.get_json(force=True, silent=True) or {}
+        records_in = payload.get("records", [])
+        if not isinstance(records_in, list):
+            return jsonify({"error": "Expected 'records' array"}), 400
+
+        existing = read_behavior()
+        injected = 0
+        for rec in records_in:
+            rec["source"]           = "hacker_bot"
+            rec["server_timestamp"] = datetime.datetime.utcnow().isoformat()
+            rec["ip_address"]       = "127.0.0.1 (hacker-bot)"
+            rec["session_id"]       = rec.get("session_id", f"bot-{injected:04d}")
+            existing.append(rec)
+            injected += 1
+
+        with open(BEHAVIOR_FILE, "w") as f:
+            json.dump(existing, f, indent=2)
+
+        return jsonify({"status": "ok", "injected": injected})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/hacker-bot/run", methods=["POST"])
+def hacker_bot_run():
+    """
+    Trigger a non-interactive hacker bot full demo run as a subprocess.
+    Requires admin session and trained ML models.
+    Returns the updated results once the run completes.
+    """
+    if not session.get("admin"):
+        return jsonify({"error": "Unauthorized"}), 403
+    try:
+        import subprocess, sys
+        bot_script = os.path.join(BASE, "hacker_bot.py")
+        result = subprocess.run(
+            [sys.executable, bot_script, "--auto"],
+            capture_output=True, text=True, timeout=180,
+            cwd=BASE,
+        )
+        if result.returncode != 0:
+            return jsonify({
+                "status": "failed",
+                "returncode": result.returncode,
+                "stderr": result.stderr[-2000:] if result.stderr else "",
+                "stdout": result.stdout[-2000:] if result.stdout else "",
+            }), 500
+
+        # Return the fresh results
+        if os.path.exists(HACKER_BOT_RESULTS_FILE):
+            with open(HACKER_BOT_RESULTS_FILE, "r") as f:
+                data = json.load(f)
+            return jsonify({"status": "ok", "results": data,
+                            "stdout": result.stdout[-1000:] if result.stdout else ""})
+        return jsonify({"status": "ok", "message": "Bot ran but no results file found."})
+    except subprocess.TimeoutExpired:
+        return jsonify({"error": "Hacker bot timed out (180s limit)"}), 504
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
