@@ -3,6 +3,8 @@ import csv
 import json
 import hashlib
 import datetime
+import urllib.request
+import urllib.error
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_cors import CORS
 
@@ -10,61 +12,13 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-prod")
 CORS(app)
 
-# ── ML Risk Scorer (lazy-loaded once) ─────────────────────────────────────────
-
-_risk_scorer = None
-_ml_available = False
-
-def _get_risk_scorer():
-    global _risk_scorer, _ml_available
-    if _risk_scorer is not None:
-        return _risk_scorer, _ml_available
-    try:
-        from ml.models import RiskScorer
-        _risk_scorer = RiskScorer()
-        _risk_scorer.load_models()
-        _ml_available = _risk_scorer._loaded
-    except Exception as e:
-        print(f"[ML] Could not load risk scorer: {e}")
-        _risk_scorer = None
-        _ml_available = False
-    return _risk_scorer, _ml_available
-
-
-def compute_session_risk_scores(behavior_records: list) -> dict:
-    """
-    Given a list of behavior records, group by session_id and compute
-    a risk score for each session using the most data-rich snapshot.
-
-    Returns a dict mapping session_id -> {score, level, breakdown, is_bot, is_anomaly}
-    """
-    scorer, available = _get_risk_scorer()
-    if not available or scorer is None:
-        return {}
-
-    from collections import defaultdict
-    by_session = defaultdict(list)
-    for rec in behavior_records:
-        sid = rec.get("session_id", "unknown")
-        by_session[sid].append(rec)
-
-    results = {}
-    for sid, records in by_session.items():
-        # Use the record with the most mouse samples (most data) for scoring
-        best = max(records, key=lambda r: r.get("mouse_sample_count") or 0)
-        # Also pass session username if available via session_id
-        try:
-            result = scorer.score(best, claimed_user_id=None)
-            results[sid] = {
-                "score": result["risk_score"],
-                "level": result["risk_level"],
-                "breakdown": result["breakdown"],
-                "is_bot": result["details"]["bot_detection"]["is_bot"],
-                "is_anomaly": result["details"]["anomaly_detection"]["is_anomaly"],
-            }
-        except Exception as e:
-            print(f"[ML] Scoring failed for session {sid[:12]}: {e}")
-    return results
+# ── Register ML Blueprint ─────────────────────────────────────────────────────
+try:
+    from ml.ml_api import ml_bp
+    app.register_blueprint(ml_bp)
+    print("[ML] Blueprint registered – endpoints: /api/ml/analyze, /api/ml/retrain, /api/ml/status")
+except ImportError as e:
+    print(f"[ML] Could not load ML module (run 'pip install -r requirements.txt'): {e}")
 
 BASE = os.path.dirname(__file__)
 LOG_FILE      = os.path.join(BASE, "logs", "captured.csv")
@@ -72,16 +26,63 @@ BEHAVIOR_FILE = os.path.join(BASE, "logs", "behavior.json")
 USERS_FILE    = os.path.join(BASE, "logs", "users.json")
 KICKED_FILE   = os.path.join(BASE, "logs", "kicked.json")
 ADMIN_TOKEN   = os.environ.get("ADMIN_TOKEN", "admin123")
+GEMINI_API_KEY = os.environ.get("AIzaSyDUrmton9H_fm3jfA0rkvSA94iWdM3agN0")
+GEMINI_MODEL   = os.environ.get("GEMINI_MODEL", "gemini-1.5-mini")
+GEMINI_URL     = f"https://gemini.googleapis.com/v1/models/{GEMINI_MODEL}:generateText"
 
-# ── SSE Connections (store active client connections) ─────────────────────────
-# Maps session_id -> list of generator functions that yield SSE messages
-_sse_clients = {}
-_sse_clients_lock = __import__('threading').Lock()
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def hash_pw(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
+
+
+def mask_password(password: str) -> str:
+    if not password:
+        return ""
+    visible_length = min(10, len(password))
+    return "*" * visible_length + ("..." if len(password) > visible_length else "")
+
+
+def parse_iso_timestamp(value: str):
+    if not value:
+        return None
+    try:
+        return datetime.datetime.fromisoformat(value)
+    except ValueError:
+        try:
+            return datetime.datetime.strptime(value[:19], "%Y-%m-%dT%H:%M:%S")
+        except Exception:
+            return None
+
+
+def is_recent(entry: dict, keys: list[str], cutoff: datetime.datetime) -> bool:
+    for key in keys:
+        ts = parse_iso_timestamp(entry.get(key, ""))
+        if ts is not None:
+            return ts >= cutoff
+    return True
+
+
+def prune_old_data(retention_hours: int = 24) -> tuple[list[dict], list[dict]]:
+    recent_cutoff = datetime.datetime.utcnow() - datetime.timedelta(hours=retention_hours)
+    logs = read_logs()
+    behavior = read_behavior()
+
+    filtered_logs = [row for row in logs if is_recent(row, ["timestamp"], recent_cutoff)]
+    filtered_behavior = [item for item in behavior if is_recent(item, ["server_timestamp"], recent_cutoff)]
+
+    if len(filtered_logs) != len(logs):
+        with open(LOG_FILE, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(CRED_HEADERS)
+            writer.writerows([[row.get(h, "") for h in CRED_HEADERS] for row in filtered_logs])
+
+    if len(filtered_behavior) != len(behavior):
+        save_behavior(filtered_behavior)
+
+    return filtered_logs, filtered_behavior
+
 
 def ensure_dirs():
     os.makedirs(os.path.join(BASE, "logs"), exist_ok=True)
@@ -167,6 +168,149 @@ def read_logs():
     with open(LOG_FILE, "r", newline="") as f:
         return [dict(r) for r in csv.DictReader(f)]
 
+def _gemini_response_text(response_json: dict) -> str:
+    if not response_json:
+        return ""
+    if isinstance(response_json, dict) and response_json.get("candidates"):
+        return "\n".join(str(c.get("output", "")) for c in response_json.get("candidates", []) if c.get("output"))
+    if isinstance(response_json, dict) and response_json.get("output"):
+        output = response_json.get("output")
+        if isinstance(output, dict):
+            if isinstance(output.get("content"), list):
+                return "".join(
+                    str(part.get("text", "")) if isinstance(part, dict) else str(part)
+                    for part in output.get("content", [])
+                )
+            return str(output.get("content", ""))
+        return str(output)
+    return json.dumps(response_json)
+
+
+def _call_gemini(prompt: str, timeout: int = 15) -> str:
+    if not GEMINI_API_KEY:
+        raise RuntimeError("GEMINI_API_KEY not configured")
+    body = json.dumps({
+        "prompt": {"text": prompt},
+        "temperature": 0.0,
+        "max_output_tokens": 800,
+    }).encode("utf-8")
+    request_obj = urllib.request.Request(
+        GEMINI_URL,
+        data=body,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {GEMINI_API_KEY}",
+        },
+        method="POST"
+    )
+    with urllib.request.urlopen(request_obj, timeout=timeout) as response:
+        response_json = json.load(response)
+    return _gemini_response_text(response_json)
+
+
+def _parse_gemini_json_array(text: str) -> list:
+    text = text.strip()
+    start = text.find("[")
+    end = text.rfind("]")
+    if start == -1 or end == -1:
+        return []
+    try:
+        return json.loads(text[start:end + 1])
+    except Exception:
+        return []
+
+
+def _find_credential_anomalies_fallback(logs: list) -> list:
+    anomalies = []
+    failed_by_ip = {}
+    failed_by_user = {}
+    for idx, row in enumerate(logs, start=1):
+        ip = row.get("ip_address", "unknown")
+        user = row.get("username", "unknown")
+        result = (row.get("result") or "").lower()
+        user_agent = (row.get("user_agent") or "").lower()
+
+        if user == "[OTP-STEP]":
+            anomalies.append({
+                "row_index": idx,
+                "username": user,
+                "reason": "OTP intercept step captured in credentials log.",
+            })
+            continue
+
+        if result == "failed":
+            failed_by_ip[ip] = failed_by_ip.get(ip, 0) + 1
+            failed_by_user[user] = failed_by_user.get(user, 0) + 1
+            if failed_by_ip[ip] >= 4:
+                anomalies.append({
+                    "row_index": idx,
+                    "username": user,
+                    "reason": f"Multiple failed login attempts from the same IP ({ip}).",
+                })
+                continue
+            if failed_by_user[user] >= 4:
+                anomalies.append({
+                    "row_index": idx,
+                    "username": user,
+                    "reason": f"Repeated failed attempts for user '{user}'.",
+                })
+                continue
+
+        if any(needle in user_agent for needle in ["bot", "curl", "python", "scrapy", "selenium", "wget"]):
+            anomalies.append({
+                "row_index": idx,
+                "username": user,
+                "reason": "Suspicious user agent suggests automated login activity.",
+            })
+    return anomalies
+
+
+def analyze_credential_logs_with_gemini(logs: list) -> list:
+    if not logs:
+        return []
+    if not GEMINI_API_KEY:
+        return _find_credential_anomalies_fallback(logs)
+
+    sample = logs[:25]
+    prompt_lines = [
+        "You are a security analyst reviewing captured login attempts.",
+        "Identify anomalous or suspicious records and return only a JSON array of objects.",
+        "Each object should include row_index, username, result, ip_address, and a short reason.",
+        "Use row_index values matching the display order in the dashboard (1 = first shown row).",
+        "Return [] if there are no suspicious records.",
+        "",
+        "Records:",
+    ]
+    for idx, row in enumerate(sample, start=1):
+        prompt_lines.append(
+            f"{idx}. timestamp={row.get('timestamp','')}, ip_address={row.get('ip_address','')}, username={row.get('username','')}, result={row.get('result','')}, account_type={row.get('account_type','')}, user_agent={row.get('user_agent','')}"
+        )
+    prompt_lines.append("\nJSON:")
+    prompt = "\n".join(prompt_lines)
+
+    try:
+        response_text = _call_gemini(prompt)
+        parsed = _parse_gemini_json_array(response_text)
+        anomalies = []
+        for item in parsed:
+            if not isinstance(item, dict):
+                continue
+            row_index = item.get("row_index")
+            try:
+                row_index = int(row_index)
+            except Exception:
+                continue
+            anomalies.append({
+                "row_index": row_index,
+                "username": str(item.get("username", "")),
+                "reason": str(item.get("reason", "")).strip(),
+            })
+        if anomalies:
+            return anomalies
+    except Exception:
+        pass
+
+    return _find_credential_anomalies_fallback(logs)
 
 # ── Behavioral log (behavior.json) ────────────────────────────────────────────
 
@@ -181,15 +325,31 @@ def read_behavior():
     with open(BEHAVIOR_FILE, "r") as f:
         return json.load(f)
 
-def append_behavior(record: dict):
+
+def save_behavior(records: list):
     ensure_behavior_file()
-    records = read_behavior()
-    records.append(record)
     with open(BEHAVIOR_FILE, "w") as f:
         json.dump(records, f, indent=2)
 
 
-# ── Routes ───────────────────────────────────────────────────────────────────
+def merge_behavior_record(records: list, record: dict):
+    session_id = record.get("session_id")
+    if session_id:
+        for idx, existing in enumerate(records):
+            if existing.get("session_id") == session_id:
+                records[idx] = record
+                return
+    records.append(record)
+
+
+def append_behavior(record: dict):
+    ensure_behavior_file()
+    records = read_behavior()
+    merge_behavior_record(records, record)
+    save_behavior(records)
+
+
+# ── Routes ────────────────────────────────────────────────────────────────────
 
 @app.route("/", methods=["GET"])
 def index():
@@ -338,7 +498,7 @@ def track():
         payload["server_timestamp"] = datetime.datetime.utcnow().isoformat()
         payload["ip_address"]  = request.headers.get("X-Forwarded-For", request.remote_addr)
         payload["user_agent"]  = request.headers.get("User-Agent", "")
-        payload["session_id"]  = request.cookies.get("session", "none")
+        payload["session_id"]  = payload.get("session_id") or request.cookies.get("session", "none")
         append_behavior(payload)
         return jsonify({"status": "ok"})
     except Exception as e:
@@ -352,26 +512,57 @@ def track_batch():
         ip  = request.headers.get("X-Forwarded-For", request.remote_addr)
         ua  = request.headers.get("User-Agent", "")
         sid = request.cookies.get("session", "none")
-        kicked = is_kicked(sid)
-        if kicked:
+        kicked_set = load_kicked()
+        item_sids = [(item.get("session_id") or sid) for item in items]
+        if any(s in kicked_set for s in item_sids):
             return jsonify({"status": "ok", "received": 0, "kicked": True})
         records = read_behavior()
+        ml_result = None
+        auto_kicked = False
         for item in items:
             item["server_timestamp"] = datetime.datetime.utcnow().isoformat()
             item["ip_address"] = ip
             item["user_agent"] = ua
-            item["session_id"] = sid
-            records.append(item)
-        with open(BEHAVIOR_FILE, "w") as f:
-            json.dump(records, f, indent=2)
-        return jsonify({"status": "ok", "received": len(items)})
+            item["session_id"] = item.get("session_id") or sid
+            merge_behavior_record(records, item)
+            # ── Real-time ML scoring (singleton) ──────────────────────
+            try:
+                from ml.ml_api import _get_scorer, _models_loaded
+                scorer = _get_scorer()
+                if _models_loaded:
+                    result = scorer.score(item)
+                    ml_result = {
+                        "risk_score": result["risk_score"],
+                        "risk_level": result["risk_level"],
+                        "is_bot": result["details"]["bot_detection"]["is_bot"],
+                        "bot_confidence": result["details"]["bot_detection"]["confidence"],
+                        "is_anomaly": result["details"]["anomaly_detection"]["is_anomaly"],
+                        "anomaly_score": result["details"]["anomaly_detection"]["anomaly_score"],
+                        "breakdown": result["breakdown"],
+                    }
+                    print(f"\n[ML] Session {item['session_id'][:8]}… → Risk: {result['risk_score']} ({result['risk_level'].upper()}) | Bot: {result['details']['bot_detection']['is_bot']}")
+                    # ── Auto-kick on high or critical risk ─────────────────
+                    if result["risk_score"] >= 50 or str(result.get("risk_level", "")).lower() in ("high", "critical"):
+                        kicked_set.add(item["session_id"])
+                        save_kicked(kicked_set)
+                        auto_kicked = True
+                        print(f"[ML] ⚠ AUTO-KICKED session {item['session_id'][:8]}… (risk={result['risk_score']})")
+            except Exception as e:
+                print(f"[ML] Scoring error: {e}")
+        save_behavior(records)
+        response = {"status": "ok", "received": len(items)}
+        if ml_result:
+            response["ml_analysis"] = ml_result
+        if auto_kicked:
+            response["auto_kicked"] = True
+        return jsonify(response)
     except Exception as e:
         return jsonify({"status": "error", "detail": str(e)}), 500
 
 
 @app.route("/api/session-check")
 def session_check():
-    sid = request.cookies.get("session", "none")
+    sid = request.args.get("session_id") or request.cookies.get("session", "none")
     if is_kicked(sid):
         session.clear()
         return jsonify({"kicked": True})
@@ -391,87 +582,10 @@ def kick_session():
     kicked = load_kicked()
     kicked.add(sid)
     save_kicked(kicked)
-    
-    # ── BROADCAST KICK EVENT TO SSE CLIENTS ──────────────────────────────────
-    _broadcast_kick_event(sid)
-    
     return jsonify({"status": "kicked", "session_id": sid})
 
 
-def _broadcast_kick_event(sid: str):
-    """Send kick notification to all SSE clients listening for this session."""
-    with _sse_clients_lock:
-        if sid in _sse_clients:
-            # Remove this client's generators (they should detect the kick next poll)
-            del _sse_clients[sid]
-
-
-@app.route("/api/session-stream", methods=["GET"])
-def session_stream():
-    """
-    Server-Sent Events endpoint for real-time session status.
-    Client connects here and receives instant updates when session is kicked.
-    """
-    sid = request.cookies.get("session", "none")
-    
-    # Verify the user is authenticated
-    if not session.get("username"):
-        return "Unauthorized", 401
-    
-    def event_generator():
-        """Generate SSE events for this session."""
-        # Check if already kicked before subscribing
-        if is_kicked(sid):
-            yield f"data: {json.dumps({'status': 'kicked'})}\n\n"
-            return
-        
-        # Register this client as active
-        with _sse_clients_lock:
-            if sid not in _sse_clients:
-                _sse_clients[sid] = []
-        
-        try:
-            # Send initial "connected" event
-            yield f"data: {json.dumps({'status': 'connected'})}\n\n"
-            
-            # Keep connection alive and check for kicks periodically
-            import time
-            consecutive_checks = 0
-            while True:
-                time.sleep(2)  # Check every 2 seconds (keep-alive + responsiveness)
-                
-                # Check if session has been kicked
-                if is_kicked(sid):
-                    yield f"data: {json.dumps({'status': 'kicked'})}\n\n"
-                    break
-                
-                # Send heartbeat to keep connection alive
-                consecutive_checks += 1
-                yield f": heartbeat {consecutive_checks}\n\n"
-                
-        except GeneratorExit:
-            # Client disconnected
-            with _sse_clients_lock:
-                if sid in _sse_clients and event_generator in _sse_clients[sid]:
-                    _sse_clients[sid].remove(event_generator)
-        finally:
-            # Cleanup
-            with _sse_clients_lock:
-                if sid in _sse_clients and len(_sse_clients[sid]) == 0:
-                    del _sse_clients[sid]
-    
-    return app.response_class(
-        event_generator(),
-        mimetype="text/event-stream",
-        headers={
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "X-Accel-Buffering": "no",
-        }
-    )
-
-
-# ── Admin dashboard ──────────────────────────────────────────────────────────
+# ── Admin dashboard ───────────────────────────────────────────────────────────
 
 @app.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
@@ -485,12 +599,19 @@ def dashboard():
     if not session.get("admin"):
         return render_template("dashboard_login.html", error=None)
 
-    logs     = list(reversed(read_logs()))
-    behavior = list(reversed(read_behavior()))
-    users    = load_users()
+    logs, behavior = prune_old_data(retention_hours=24)
+    logs = list(reversed(logs))
+    behavior = list(reversed(behavior))
+    users = load_users()
 
-    # Compute ML risk scores per session (keyed by session_id)
-    risk_scores = compute_session_risk_scores(read_behavior())
+    for row in logs:
+        row["password"] = mask_password(row.get("password", ""))
+
+    credential_anomalies = analyze_credential_logs_with_gemini(logs)
+    anomaly_map = {item["row_index"]: item["reason"] for item in credential_anomalies}
+    for idx, row in enumerate(logs, start=1):
+        if idx in anomaly_map:
+            row["_anomaly_reason"] = anomaly_map[idx]
 
     stats = {
         "total":             len(logs),
@@ -500,17 +621,33 @@ def dashboard():
         "registered_users":  len(users),
         "failed_logins":     sum(1 for r in logs if r.get("result") == "failed"),
         "success_logins":    sum(1 for r in logs if r.get("result") == "success"),
-        "ml_available":      bool(risk_scores),
-        "high_risk_sessions": sum(
-            1 for v in risk_scores.values() if v["level"] in ("high", "critical")
-        ),
     }
     for row in logs:
         at = row.get("account_type", "unknown")
         stats["account_types"][at] = stats["account_types"].get(at, 0) + 1
 
-    return render_template("dashboard.html", logs=logs, stats=stats,
-                           behavior=behavior, users=users, risk_scores=risk_scores)
+    return render_template(
+        "dashboard.html",
+        logs=logs,
+        stats=stats,
+        behavior=behavior,
+        users=users,
+        credential_anomalies=credential_anomalies,
+        gemini_available=bool(GEMINI_API_KEY),
+    )
+
+
+@app.route("/api/dashboard/status")
+def dashboard_status():
+    if not session.get("admin"):
+        return jsonify({"status": "unauthorized"}), 403
+    logs, behavior = prune_old_data(retention_hours=24)
+    return jsonify({
+        "status": "ok",
+        "log_count": len(logs),
+        "behavior_count": len(behavior),
+        "kicked_count": len(load_kicked()),
+    })
 
 
 @app.route("/dashboard/export/credentials")
@@ -569,5 +706,5 @@ def dashboard_logout():
 if __name__ == "__main__":
     ensure_log_file()
     ensure_behavior_file()
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 5001))
     app.run(host="0.0.0.0", port=port, debug=False)

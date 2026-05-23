@@ -122,7 +122,7 @@ def extract_features(record: dict) -> np.ndarray:
     total_cells = max(grid_cols * grid_rows, 1)
 
     f["heatmap_entropy"]        = _entropy(hm_counts)
-    f["heatmap_spread"]         = float(len(hm_counts))
+    f["heatmap_spread"]         = float(len(hm_counts))  # unique cells visited
     f["heatmap_total_count"]    = float(sum(hm_counts)) if hm_counts else 0.0
     f["heatmap_concentration"]  = (
         max(hm_counts) / f["heatmap_total_count"]
@@ -192,6 +192,7 @@ def extract_features(record: dict) -> np.ndarray:
     f["plugins_count"]        = _safe(fp.get("plugins_count"), 0)
     f["color_depth"]          = _safe(fp.get("color_depth"), 24)
 
+    # Simple mobile heuristic: touch support + small screen
     f["is_mobile"] = 1.0 if (fp.get("touch_points", 0) > 0 and sw < 800) else 0.0
 
     # ── Assemble vector in canonical order ────────────────────────────────

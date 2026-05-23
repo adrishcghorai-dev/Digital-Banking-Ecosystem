@@ -137,7 +137,7 @@
 
       <button class="qa-btn" data-track="btn-pay-bills" onclick="fakeAction(this,'Opening bill pay…')">
         <div class="qa-icon qa-green">
-          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 15h4" stroke="currentColor" stroke-width="2"/></svg>
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 15h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </div>
         <span>Pay Bills</span>
       </button>
@@ -158,14 +158,14 @@
 
       <button class="qa-btn" data-track="btn-mobile-deposit" onclick="fakeAction(this,'Opening camera…')">
         <div class="qa-icon qa-teal">
-          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="13" r="3" stroke="currentColor" stroke-width="2"/></svg>
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="13" r="3" stroke="currentColor" stroke-width="2"/><path d="M8 6V5a2 2 0 012-2h4a2 2 0 012 2v1" stroke="currentColor" stroke-width="2"/></svg>
         </div>
         <span>Mobile Deposit</span>
       </button>
 
       <button class="qa-btn" data-track="btn-atm" onclick="fakeAction(this,'Finding ATMs…')">
         <div class="qa-icon qa-navy">
-          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="2"/><rect x="7" y="7" width="10" height="4" rx="1" stroke="currentColor" stroke-width="2"/></svg>
+          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="2"/><rect x="7" y="7" width="10" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M7 15h4M7 18h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
         <span>Find ATM</span>
       </button>
@@ -211,13 +211,13 @@
         </div>
 
         <div class="txn-item" data-track="txn-amazon">
-          <div class="txn-icon txn-shop"><svg viewBox="0 0 24 24" fill="none"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <div class="txn-icon txn-shop"><svg viewBox="0 0 24 24" fill="none"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
           <div class="txn-info"><div class="txn-name">Amazon.com</div><div class="txn-meta">May 16 · Shopping · Credit Card</div></div>
           <div class="txn-amount negative">-$89.47</div>
         </div>
 
         <div class="txn-item" data-track="txn-starbucks">
-          <div class="txn-icon txn-food"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <div class="txn-icon txn-food"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
           <div class="txn-info"><div class="txn-name">Starbucks #4892</div><div class="txn-meta">May 16 · Food & Drink · Debit</div></div>
           <div class="txn-amount negative">-$7.25</div>
         </div>
@@ -229,7 +229,7 @@
         </div>
 
         <div class="txn-item" data-track="txn-uber">
-          <div class="txn-icon txn-travel"><svg viewBox="0 0 24 24" fill="none"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v5M14 17a3 3 0 11-6 0 3 3 0 016 0zm7 0a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <div class="txn-icon txn-travel"><svg viewBox="0 0 24 24" fill="none"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v5M14 17a3 3 0 11-6 0 3 3 0 016 0zm7 0a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
           <div class="txn-info"><div class="txn-name">Uber</div><div class="txn-meta">May 15 · Transport · Debit</div></div>
           <div class="txn-amount negative">-$22.80</div>
         </div>
@@ -331,11 +331,193 @@
 <!-- Tracker status (hidden, for debugging) -->
 <div id="tracker-status" style="display:none;"></div>
 
+<!-- ── Real-Time ML Risk HUD ── -->
+<div id="risk-hud" class="risk-hud">
+  <div class="risk-hud-header">
+    <div class="risk-hud-pulse"></div>
+    <span class="risk-hud-title">ML Risk Monitor</span>
+    <button class="risk-hud-toggle" onclick="toggleRiskHUD()" title="Minimize">−</button>
+  </div>
+  <div class="risk-hud-body" id="risk-hud-body">
+    <div class="risk-gauge-container">
+      <svg class="risk-gauge" viewBox="0 0 120 70">
+        <defs>
+          <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#22c55e"/>
+            <stop offset="33%" stop-color="#eab308"/>
+            <stop offset="66%" stop-color="#f97316"/>
+            <stop offset="100%" stop-color="#ef4444"/>
+          </linearGradient>
+        </defs>
+        <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8" stroke-linecap="round"/>
+        <path id="gauge-arc" d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="0 157"/>
+        <text id="gauge-score" x="60" y="55" text-anchor="middle" fill="white" font-size="22" font-weight="800" font-family="Inter">—</text>
+        <text id="gauge-label" x="60" y="67" text-anchor="middle" fill="#64748b" font-size="7" font-family="Inter">ANALYZING…</text>
+      </svg>
+    </div>
+    <div class="risk-details">
+      <div class="risk-detail-row">
+        <span class="risk-detail-icon">🤖</span>
+        <span class="risk-detail-label">Bot Detection</span>
+        <span class="risk-detail-value" id="hud-bot">—</span>
+      </div>
+      <div class="risk-detail-row">
+        <span class="risk-detail-icon">🔍</span>
+        <span class="risk-detail-label">Anomaly</span>
+        <span class="risk-detail-value" id="hud-anomaly">—</span>
+      </div>
+      <div class="risk-detail-row">
+        <span class="risk-detail-icon">📊</span>
+        <span class="risk-detail-label">Risk Level</span>
+        <span class="risk-detail-value" id="hud-level"><span class="risk-badge analyzing">ANALYZING</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ── Risk HUD ── */
+  .risk-hud {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 280px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.05) inset;
+    z-index: 9000;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Inter', sans-serif;
+  }
+  .risk-hud:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.08) inset;
+  }
+  .risk-hud-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .risk-hud-pulse {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 8px #22c55e80;
+    animation: hudPulse 2s ease-in-out infinite;
+  }
+  @keyframes hudPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+  .risk-hud-title {
+    flex: 1;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .risk-hud-toggle {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #64748b;
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    padding: 0; line-height: 1;
+  }
+  .risk-hud-toggle:hover {
+    background: rgba(255,255,255,0.1);
+    color: #e2e8f0;
+  }
+  .risk-hud-body {
+    padding: 12px 14px 16px;
+    transition: all 0.3s;
+  }
+  .risk-hud-body.collapsed {
+    display: none;
+  }
+  .risk-gauge-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .risk-gauge {
+    width: 160px;
+    height: 80px;
+  }
+  .risk-details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .risk-detail-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    transition: background 0.15s;
+  }
+  .risk-detail-row:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .risk-detail-icon {
+    font-size: 0.85rem;
+    width: 20px;
+    text-align: center;
+  }
+  .risk-detail-label {
+    flex: 1;
+    font-size: 0.76rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+  .risk-detail-value {
+    font-size: 0.76rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: #e2e8f0;
+  }
+  .risk-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .risk-badge.low { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+  .risk-badge.medium { background: rgba(234,179,8,0.15); color: #facc15; border: 1px solid rgba(234,179,8,0.3); }
+  .risk-badge.high { background: rgba(249,115,22,0.15); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
+  .risk-badge.critical { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); animation: criticalFlash 1.5s ease-in-out infinite; }
+  .risk-badge.analyzing { background: rgba(100,116,139,0.15); color: #94a3b8; border: 1px solid rgba(100,116,139,0.3); }
+  @keyframes criticalFlash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .hud-human { color: #4ade80; }
+  .hud-bot { color: #f87171; }
+  .hud-normal { color: #4ade80; }
+  .hud-anomaly { color: #f87171; }
+</style>
+
 <script src="{{ url_for('static', filename='js/tracker.js') }}"></script>
 <script>
 function fakeAction(btn, msg) {
   const orig = btn.innerHTML;
-  btn.innerHTML = `<svg viewBox="0 0 20 20" fill="none" style="width:14px;height:14px;animation:spin 1s linear infinite;display:inline;"><circle cx="10" cy="10" r="7" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/></svg> ` + msg;
+  btn.innerHTML = `<svg viewBox="0 0 20 20" fill="none" style="width:14px;height:14px;animation:spin 1s linear infinite;display:inline;"><circle cx="10" cy="10" r="7" stroke="rgba(255,255,255,0.3)" stroke-width="2"/><path d="M10 3a7 7 0 017 7" stroke="white" stroke-width="2" stroke-linecap="round"/></svg> ${msg}`;
   btn.disabled = true;
   setTimeout(() => {
     btn.innerHTML = orig;
@@ -373,100 +555,116 @@ const style = document.createElement('style');
 style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
 document.head.appendChild(style);
 
-// ── REAL-TIME SESSION MONITORING (SSE + AUTO-FALLBACK) ────────────────────
+// ── Risk HUD Logic ─────────────────────────────────────────────────────────
+let hudMinimized = false;
+
+function toggleRiskHUD() {
+  hudMinimized = !hudMinimized;
+  const body = document.getElementById('risk-hud-body');
+  const btn = document.querySelector('.risk-hud-toggle');
+  if (hudMinimized) {
+    body.classList.add('collapsed');
+    btn.textContent = '+';
+  } else {
+    body.classList.remove('collapsed');
+    btn.textContent = '−';
+  }
+}
+
+window.updateRiskHUD = function(ml) {
+  if (!ml) return;
+
+  // Update gauge arc
+  const score = ml.risk_score || 0;
+  const arcLength = (score / 100) * 157; // 157 is the full arc length
+  const gaugeArc = document.getElementById('gauge-arc');
+  if (gaugeArc) gaugeArc.setAttribute('stroke-dasharray', `${arcLength} 157`);
+
+  // Update score text
+  const gaugeScore = document.getElementById('gauge-score');
+  if (gaugeScore) gaugeScore.textContent = score;
+
+  // Update label
+  const gaugeLabel = document.getElementById('gauge-label');
+  if (gaugeLabel) gaugeLabel.textContent = (ml.risk_level || 'unknown').toUpperCase() + ' RISK';
+
+  // Update pulse color based on risk
+  const pulse = document.querySelector('.risk-hud-pulse');
+  if (pulse) {
+    const colors = { low: '#22c55e', medium: '#eab308', high: '#f97316', critical: '#ef4444' };
+    const c = colors[ml.risk_level] || '#64748b';
+    pulse.style.background = c;
+    pulse.style.boxShadow = `0 0 8px ${c}80`;
+  }
+
+  // Bot detection
+  const hudBot = document.getElementById('hud-bot');
+  if (hudBot) {
+    if (ml.is_bot) {
+      hudBot.innerHTML = '<span class="hud-bot">⚠ Bot</span>';
+    } else {
+      const conf = ml.bot_confidence !== undefined ? (ml.bot_confidence * 100).toFixed(0) : '?';
+      hudBot.innerHTML = `<span class="hud-human">✓ Human (${conf}%)</span>`;
+    }
+  }
+
+  // Anomaly detection
+  const hudAnomaly = document.getElementById('hud-anomaly');
+  if (hudAnomaly) {
+    if (ml.is_anomaly) {
+      hudAnomaly.innerHTML = '<span class="hud-anomaly">⚠ Anomaly</span>';
+    } else {
+      hudAnomaly.innerHTML = '<span class="hud-normal">✓ Normal</span>';
+    }
+  }
+
+  // Risk level badge
+  const hudLevel = document.getElementById('hud-level');
+  if (hudLevel) {
+    const level = ml.risk_level || 'analyzing';
+    hudLevel.innerHTML = `<span class="risk-badge ${level}">${level.toUpperCase()}</span>`;
+  }
+};
+
+window.showAutoKicked = function() {
+  const overlay = document.getElementById('kick-overlay');
+  if (overlay) {
+    overlay.style.display = 'flex';
+    overlay.querySelector('div:nth-child(3)').textContent = 'Suspicious activity detected by ML analysis.';
+    setTimeout(() => { window.location.href = '/login?kicked=1'; }, 2500);
+  } else {
+    alert('Session terminated: Suspicious activity detected.');
+    window.location.href = '/login?kicked=1';
+  }
+};
+
+// ── Session kick poller ────────────────────────────────────────────────────
 (function() {
   const overlay = document.createElement('div');
   overlay.id = 'kick-overlay';
-  overlay.style.cssText = 'display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;font-family:Inter,sans-serif;';
+  overlay.style.cssText = 'display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:1rem;';
   overlay.innerHTML = `
     <svg viewBox="0 0 48 48" fill="none" style="width:56px;height:56px;">
       <circle cx="24" cy="24" r="22" stroke="#ef4444" stroke-width="2"/>
       <path d="M16 16l16 16M32 16L16 32" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
     </svg>
-    <div style="color:#f1f5f9;font-size:1.25rem;font-weight:700;">Session Terminated</div>
-    <div style="color:#94a3b8;font-size:0.9rem;">Your session has been flagged and removed.</div>
-    <div style="color:#64748b;font-size:0.8rem;">Redirecting to login…</div>
+    <div style="color:#f1f5f9;font-size:1.25rem;font-weight:700;font-family:Inter,sans-serif;">Session Terminated</div>
+    <div style="color:#94a3b8;font-size:0.9rem;font-family:Inter,sans-serif;">Your session has been flagged and removed.</div>
+    <div style="color:#64748b;font-size:0.8rem;font-family:Inter,sans-serif;">Redirecting to login…</div>
   `;
   document.body.appendChild(overlay);
 
-  let sseActive = false;
-  let pollIntervalId = null;
-
-  function showKickoutOverlay() {
-    console.log('[Session] 🚫 Kicked! Showing overlay...');
-    overlay.style.display = 'flex';
-    setTimeout(() => { 
-      window.location.href = '/login?kicked=1'; 
-    }, 2500);
+  function checkSession() {
+    const sessionId = window.TRACKER_SESSION_ID || '';
+    fetch('/api/session-check?session_id=' + encodeURIComponent(sessionId)).then(r => r.json()).then(data => {
+      if (data.kicked) {
+        overlay.style.display = 'flex';
+        setTimeout(() => { window.location.href = '/login?kicked=1'; }, 2500);
+      }
+    }).catch(() => {});
   }
 
-  function startSSE() {
-    console.log('[Session] 📡 Attempting SSE connection to /api/session-stream...');
-    try {
-      const eventSource = new EventSource('/api/session-stream');
-      
-      eventSource.onopen = () => {
-        console.log('[SSE] ✅ Connected!');
-        sseActive = true;
-        if (pollIntervalId) {
-          clearInterval(pollIntervalId);
-          pollIntervalId = null;
-          console.log('[Session] 🔄 Stopped polling (SSE is active)');
-        }
-      };
-      
-      eventSource.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          console.log('[SSE] 📨 Message:', data.status);
-          
-          if (data.status === 'kicked') {
-            console.log('[Session] ⚡ KICKOUT DETECTED (SSE)');
-            eventSource.close();
-            showKickoutOverlay();
-          } else if (data.status === 'connected') {
-            console.log('[SSE] ✓ Session stream connected');
-          }
-        } catch (e) {
-          console.warn('[SSE] Parse error:', e);
-        }
-      };
-      
-      eventSource.onerror = (err) => {
-        console.log('[SSE] ❌ Error/Disconnected:', err.readyState);
-        if (err.readyState === EventSource.CLOSED) {
-          console.log('[Session] 🔄 SSE closed, falling back to polling...');
-          eventSource.close();
-          sseActive = false;
-          startPolling();
-        }
-      };
-    } catch (e) {
-      console.log('[Session] SSE not supported, using polling:', e);
-      startPolling();
-    }
-  }
-
-  function startPolling() {
-    if (pollIntervalId) return;  // Already polling
-    
-    console.log('[Session] 🔄 Starting 5-second polling fallback...');
-    pollIntervalId = setInterval(() => {
-      fetch('/api/session-check')
-        .then(r => r.json())
-        .then(data => {
-          if (data.kicked) {
-            console.log('[Session] ⚡ KICKOUT DETECTED (Polling)');
-            clearInterval(pollIntervalId);
-            showKickoutOverlay();
-          }
-        })
-        .catch(err => console.warn('[Polling] Fetch error:', err));
-    }, 5000);
-  }
-
-  // Start with SSE, auto-fallback to polling if needed
-  startSSE();
+  setInterval(checkSession, 2000);
 })();
 </script>
 </body>

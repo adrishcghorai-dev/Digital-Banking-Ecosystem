@@ -8,6 +8,7 @@
   'use strict';
 
   const SESSION_ID = Math.random().toString(36).slice(2) + Date.now();
+  window.TRACKER_SESSION_ID = SESSION_ID;
   const PAGE = window.location.pathname;
   const T0 = Date.now();
 
@@ -366,16 +367,34 @@
       }).then(r => r.json()).then(data => {
         if (data && data.kicked) {
           window.location.href = '/login?kicked=1';
+          return;
+        }
+        // ── Real-time ML HUD update ──────────────────────────────
+        if (data && data.ml_analysis) {
+          if (typeof window.updateRiskHUD === 'function') {
+            window.updateRiskHUD(data.ml_analysis);
+          }
+        }
+        // ── Auto-kicked by ML ────────────────────────────────────
+        if (data && data.auto_kicked) {
+          if (typeof window.showAutoKicked === 'function') {
+            window.showAutoKicked();
+          } else {
+            window.location.href = '/login?kicked=1';
+          }
         }
       }).catch(() => {});
     }
 
-    document.getElementById('tracker-status').textContent =
-      `[tracker] sent snapshot — ${snapshot.mouse_sample_count} pts, ${snapshot.click_count} clicks, ${snapshot.keystroke_count} keys`;
+    const statusEl = document.getElementById('tracker-status');
+    if (statusEl) {
+      statusEl.textContent =
+        `[tracker] sent snapshot — ${snapshot.mouse_sample_count} pts, ${snapshot.click_count} clicks, ${snapshot.keystroke_count} keys`;
+    }
   }
 
-  // Send every 30 seconds and on unload
-  setInterval(() => send(false), 30000);
+  // Send every 5 seconds for faster real-time updates and kick detection
+  setInterval(() => send(false), 5000);
   window.addEventListener('beforeunload', () => send(true));
   window.addEventListener('pagehide', () => send(true));
 

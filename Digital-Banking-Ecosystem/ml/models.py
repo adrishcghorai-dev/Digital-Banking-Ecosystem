@@ -52,12 +52,14 @@ class BotDetector:
         self._fitted = False
 
     def fit(self, X: np.ndarray, y: np.ndarray):
+        """Train on feature matrix X and binary labels y."""
         X_scaled = self.scaler.fit_transform(X)
         self.model.fit(X_scaled, y)
         self._fitted = True
         return self
 
     def predict(self, X: np.ndarray) -> dict:
+        """Predict for a single sample (1, 42) or batch."""
         if not self._fitted:
             raise RuntimeError("BotDetector not trained – call fit() or load()")
         X = np.atleast_2d(X)
@@ -73,6 +75,7 @@ class BotDetector:
         return results if len(results) > 1 else results[0]
 
     def feature_importances(self) -> dict:
+        """Return feature importance ranking."""
         if not self._fitted:
             return {}
         imp = self.model.feature_importances_
@@ -110,6 +113,7 @@ class AnomalyDetector:
         self._fitted = False
 
     def fit(self, X_normal: np.ndarray):
+        """Train on feature matrix of NORMAL samples only."""
         X_scaled = self.scaler.fit_transform(X_normal)
         self.model.fit(X_scaled)
         self._fitted = True
@@ -150,12 +154,21 @@ class UserVerifier:
     """One-Class SVM per user for behavioral biometric verification."""
 
     def __init__(self):
-        self.user_models = {}
-        self.user_scalers = {}
+        self.user_models = {}      # user_id -> OneClassSVM
+        self.user_scalers = {}     # user_id -> StandardScaler
         self.global_scaler = StandardScaler()
         self._fitted = False
 
     def fit(self, X: np.ndarray, user_ids: np.ndarray, min_samples: int = 5):
+        """
+        Train a One-Class SVM for each user that has ≥ min_samples records.
+
+        Parameters
+        ----------
+        X : (n, 42)
+        user_ids : (n,) string array of user identifiers
+        min_samples : minimum records per user to build a model
+        """
         self.global_scaler.fit(X)
         unique_users = set(user_ids)
 
@@ -178,6 +191,13 @@ class UserVerifier:
         return self
 
     def verify(self, X: np.ndarray, claimed_user_id: str) -> dict:
+        """
+        Check if behaviour matches the claimed user.
+
+        Returns
+        -------
+        dict with is_verified, similarity_score
+        """
         if not self._fitted:
             raise RuntimeError("UserVerifier not trained")
 
@@ -197,7 +217,8 @@ class UserVerifier:
         score = float(svm.decision_function(X_scaled)[0])
         pred = int(svm.predict(X_scaled)[0])
 
-        similarity = 1.0 / (1.0 + np.exp(-score))
+        # Normalise decision_function score to [0, 1]
+        similarity = 1.0 / (1.0 + np.exp(-score))  # sigmoid
 
         return {
             "is_verified": bool(pred == 1),
@@ -237,28 +258,37 @@ class RiskScorer:
         10% rule-based flags
     """
 
+    # ── Rule-based red flags ──────────────────────────────────────────────
+
     @staticmethod
     def _rule_flags(record: dict) -> float:
+        """Return 0–1 score from rule-based heuristics."""
         flags = 0
         total = 6
 
+        # 1. Session too short (< 2s)
         if (record.get("session_duration_ms") or 0) < 2000:
             flags += 1
 
+        # 2. Zero mouse samples
         if (record.get("mouse_sample_count") or 0) == 0:
             flags += 1
 
+        # 3. Zero keystrokes on login/register page
         page = record.get("page", "")
         if page in ("/login", "/register") and (record.get("keystroke_count") or 0) == 0:
             flags += 1
 
+        # 4. Impossibly fast typing (> 25 chars/sec)
         if (record.get("typing_speed_cps") or 0) > 25:
             flags += 1
 
+        # 5. Zero idle time in long session
         dur = record.get("session_duration_ms") or 0
         if dur > 10000 and (record.get("idle_ratio") or 0) < 0.01:
             flags += 1
 
+        # 6. Suspiciously low mouse speed std (robotic movement)
         ms_mean = record.get("mouse_speed_mean") or 0
         ms_std = record.get("mouse_speed_std") or 0
         if ms_mean > 500 and ms_std < 50:
@@ -273,6 +303,7 @@ class RiskScorer:
         self._loaded = False
 
     def load_models(self):
+        """Load all sub-models from disk."""
         try:
             self.bot_detector.load()
             self.anomaly_detector.load()
@@ -284,19 +315,36 @@ class RiskScorer:
         return self
 
     def score(self, record: dict, claimed_user_id: str = None) -> dict:
+        """
+        Compute composite risk score for a single behavior snapshot.
+
+        Parameters
+        ----------
+        record : dict
+            Raw behavior_snapshot from behavior.json.
+        claimed_user_id : str, optional
+            If provided, identity verification is included.
+
+        Returns
+        -------
+        dict with score (0-100), risk_level, and breakdown.
+        """
         if not self._loaded:
             self.load_models()
 
         features = extract_features(record)
         features_2d = features.reshape(1, -1)
 
+        # Component scores (each 0–1)
         bot_result = self.bot_detector.predict(features_2d)
         bot_score = bot_result["confidence"]
 
         ano_result = self.anomaly_detector.predict(features_2d)
+        # Map anomaly_score to 0-1: more negative = more anomalous
         raw_ano = ano_result["anomaly_score"]
-        anomaly_score = 1.0 / (1.0 + np.exp(raw_ano * 5))
+        anomaly_score = 1.0 / (1.0 + np.exp(raw_ano * 5))  # sigmoid transform
 
+        # Identity score
         if claimed_user_id and self.user_verifier._fitted:
             id_result = self.user_verifier.verify(features_2d, claimed_user_id)
             identity_mismatch = 1.0 - id_result["similarity_score"]
@@ -305,8 +353,10 @@ class RiskScorer:
                          "reason": "No user claim provided"}
             identity_mismatch = 0.0
 
+        # Rule-based flags
         rule_score = self._rule_flags(record)
 
+        # Weighted composite
         composite = (
             0.40 * bot_score +
             0.30 * anomaly_score +
@@ -315,6 +365,7 @@ class RiskScorer:
         )
         risk_score = int(round(min(max(composite * 100, 0), 100)))
 
+        # Classify risk level
         if risk_score >= 75:
             level = "critical"
         elif risk_score >= 50:

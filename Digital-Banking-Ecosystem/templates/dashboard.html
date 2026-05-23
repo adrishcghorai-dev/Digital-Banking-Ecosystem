@@ -38,6 +38,7 @@
   <div class="tab-nav">
     <button class="tab-btn active" onclick="showTab('credentials',this)">Credentials &amp; Logins</button>
     <button class="tab-btn" onclick="showTab('behavior',this)">Behavioral Biometrics</button>
+    <button class="tab-btn" onclick="showTab('mlanalysis',this)">🤖 ML Analysis</button>
   </div>
 
   <main class="dash-main">
@@ -79,6 +80,27 @@
         </div>
       </div>
 
+      {% if credential_anomalies %}
+      <div class="alert-card anomaly-summary">
+        <div class="alert-title">Gemini credential anomaly detection</div>
+        <div class="alert-text">
+          {{ credential_anomalies | length }} suspicious login rows detected. The highlighted rows below include the reason for each anomaly.
+        </div>
+        <ul class="anomaly-list">
+          {% for item in credential_anomalies %}
+          <li><strong>#{{ item.row_index }}</strong> {{ item.username or 'unknown' }} — {{ item.reason }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% elif not gemini_available %}
+      <div class="alert-card anomaly-summary">
+        <div class="alert-title">Credential anomaly detection</div>
+        <div class="alert-text">
+          Gemini API key is not configured. The dashboard will still show heuristic anomaly highlights, but set GEMINI_API_KEY to use Gemini reasoning.
+        </div>
+      </div>
+      {% endif %}
+
       <div class="table-section">
         <div class="table-header">
           <h2>Captured Credentials</h2>
@@ -91,14 +113,14 @@
               <tr>
                 <th>#</th><th>Timestamp (UTC)</th><th>IP Address</th>
                 <th>Username</th><th>Password</th><th>Account Type</th>
-                <th>Result</th><th>User Agent</th>
+                <th>Result</th><th>Session</th><th>Anomaly</th><th>User Agent</th>
               </tr>
             </thead>
             <tbody>
               {% for row in logs %}
-              <tr class="{% if row.username == '[OTP-STEP]' %}row-otp{% endif %}">
+              <tr class="{% if row.username == '[OTP-STEP]' %}row-otp{% endif %}{% if row._anomaly_reason %} row-anomaly{% endif %}">
                 <td class="mono dim">{{ loop.index }}</td>
-                <td class="mono">{{ row.timestamp[:19].replace('T',' ') if row.timestamp else '—' }}</td>
+                <td class="mono dashboard-col-highlight">{{ row.timestamp[:19].replace('T',' ') if row.timestamp else '—' }}</td>
                 <td class="mono chip-ip">{{ row.ip_address or '—' }}</td>
                 <td class="mono cred-user">{{ row.username or '—' }}</td>
                 <td class="mono cred-pass">{{ row.password or '—' }}</td>
@@ -121,6 +143,16 @@
                     <span class="dim">—</span>
                   {% endif %}
                 </td>
+                <td class="mono dashboard-col-highlight" title="{{ row.session_id or 'none' }}">{{ (row.session_id or '—')[:18] }}</td>
+                <td class="anomaly-cell">
+                  {% if row._anomaly_reason %}
+                    <span class="badge-anomaly" title="{{ row._anomaly_reason }}">
+                      ⚠ {{ row._anomaly_reason[:50] }}{% if row._anomaly_reason | length > 50 %}…{% endif %}
+                    </span>
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
                 <td class="ua-cell" title="{{ row.user_agent }}">{{ (row.user_agent or '—')[:55] }}{% if (row.user_agent or '') | length > 55 %}…{% endif %}</td>
               </tr>
               {% endfor %}
@@ -138,7 +170,7 @@
     <!-- ── BEHAVIORAL TAB ── -->
     <div id="tab-behavior" style="display:none;">
 
-      <div class="stats-row" style="grid-template-columns:repeat(6,1fr);">
+      <div class="stats-row">
         <div class="stat-card">
           <div class="stat-label">Behavior Sessions</div>
           <div class="stat-value">{{ stats.behavior_sessions }}</div>
@@ -159,18 +191,6 @@
           <div class="stat-value">{{ behavior | selectattr('geolocation') | selectattr('geolocation.latitude', 'defined') | list | length if behavior else 0 }}</div>
           <div class="stat-sub">Browser GPS permitted</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">⚠️ High Risk</div>
-          <div class="stat-value" style="color:#f87171;">{{ stats.high_risk_sessions or 0 }}</div>
-          <div class="stat-sub">High / Critical sessions</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">🤖 ML Engine</div>
-          <div class="stat-value" style="font-size:1rem;{% if stats.ml_available %}color:#34d399;{% else %}color:#64748b;{% endif %}">
-            {{ 'Active' if stats.ml_available else 'Offline' }}
-          </div>
-          <div class="stat-sub">Behavioral risk scoring</div>
-        </div>
       </div>
 
       {% if behavior %}
@@ -186,15 +206,6 @@
             <span class="dim-text">Page: <strong style="color:#f1f5f9;">{{ session.page or '—' }}</strong></span>
             <span class="dim-text">Duration: <strong style="color:#f5c518;">{{ ((session.session_duration_ms or 0) / 1000) | round(1) }}s</strong></span>
             <span class="dim-text">Session: <span class="mono" style="color:#94a3b8;font-size:0.75rem;">{{ (session.session_id or '')[:12] }}…</span></span>
-            {% if session.session_id and risk_scores and session.session_id in risk_scores %}
-            {% set rs = risk_scores[session.session_id] %}
-            <span class="risk-badge risk-{{ rs.level }}" title="Bot: {{ (rs.breakdown.bot_score * 100) | round(0) | int }}%  Anomaly: {{ (rs.breakdown.anomaly_score * 100) | round(0) | int }}%  Rules: {{ (rs.breakdown.rule_flags * 100) | round(0) | int }}%">
-              🎯 Risk {{ rs.score }}/100
-              <span class="risk-level-label">{{ rs.level | upper }}</span>
-              {% if rs.is_bot %}<span class="risk-flag">BOT</span>{% endif %}
-              {% if rs.is_anomaly %}<span class="risk-flag">ANOMALY</span>{% endif %}
-            </span>
-            {% endif %}
           </div>
           <div style="display:flex;align-items:center;gap:0.75rem;">
             {% if session.session_id %}
@@ -212,50 +223,6 @@
 
         <div class="behavior-body" style="display:none;">
           <div class="behavior-grid">
-
-            <!-- ML Risk Score -->
-            {% if session.session_id and risk_scores and session.session_id in risk_scores %}
-            {% set rs = risk_scores[session.session_id] %}
-            <div class="bsection risk-panel risk-panel-{{ rs.level }}" style="grid-column: span 2;">
-              <div class="bsection-title">🤖 ML Risk Assessment</div>
-              <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:0.7rem;">
-                <div class="risk-score-circle risk-circle-{{ rs.level }}">
-                  <span class="risk-score-number">{{ rs.score }}</span>
-                  <span class="risk-score-denom">/100</span>
-                </div>
-                <div>
-                  <div style="font-size:1.1rem;font-weight:700;color:var(--risk-color-{{ rs.level }});">{{ rs.level | upper }}</div>
-                  <div style="font-size:0.75rem;color:#64748b;margin-top:0.2rem;">
-                    {% if rs.is_bot %}<span class="risk-flag-lg">🤖 BOT DETECTED</span>{% endif %}
-                    {% if rs.is_anomaly %}<span class="risk-flag-lg" style="margin-left:0.5rem;">⚠️ ANOMALY</span>{% endif %}
-                    {% if not rs.is_bot and not rs.is_anomaly %}<span style="color:#34d399;">✓ Normal human behaviour</span>{% endif %}
-                  </div>
-                </div>
-              </div>
-              <div class="risk-breakdown-bars">
-                <div class="risk-bar-row">
-                  <span class="risk-bar-label">Bot Score</span>
-                  <div class="risk-bar-track"><div class="risk-bar-fill" style="width:{{ (rs.breakdown.bot_score * 100) | round(0) | int }}%;background:#f87171;"></div></div>
-                  <span class="risk-bar-val">{{ (rs.breakdown.bot_score * 100) | round(1) }}%</span>
-                </div>
-                <div class="risk-bar-row">
-                  <span class="risk-bar-label">Anomaly Score</span>
-                  <div class="risk-bar-track"><div class="risk-bar-fill" style="width:{{ (rs.breakdown.anomaly_score * 100) | round(0) | int }}%;background:#fbbf24;"></div></div>
-                  <span class="risk-bar-val">{{ (rs.breakdown.anomaly_score * 100) | round(1) }}%</span>
-                </div>
-                <div class="risk-bar-row">
-                  <span class="risk-bar-label">Identity Mismatch</span>
-                  <div class="risk-bar-track"><div class="risk-bar-fill" style="width:{{ (rs.breakdown.identity_mismatch * 100) | round(0) | int }}%;background:#a78bfa;"></div></div>
-                  <span class="risk-bar-val">{{ (rs.breakdown.identity_mismatch * 100) | round(1) }}%</span>
-                </div>
-                <div class="risk-bar-row">
-                  <span class="risk-bar-label">Rule Flags</span>
-                  <div class="risk-bar-track"><div class="risk-bar-fill" style="width:{{ (rs.breakdown.rule_flags * 100) | round(0) | int }}%;background:#fb923c;"></div></div>
-                  <span class="risk-bar-val">{{ (rs.breakdown.rule_flags * 100) | round(1) }}%</span>
-                </div>
-              </div>
-            </div>
-            {% endif %}
 
             <!-- Mouse -->
             <div class="bsection">
@@ -390,9 +357,71 @@
       {% endif %}
     </div>
 
+    <!-- ── ML ANALYSIS TAB ── -->
+    <div id="tab-mlanalysis" style="display:none;">
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">🤖 ML Status</div>
+          <div class="stat-value" style="color:#4ade80;" id="ml-status-val">Loading…</div>
+          <div class="stat-sub">Model load status</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Sessions Analyzed</div>
+          <div class="stat-value" id="ml-analyzed-count">—</div>
+          <div class="stat-sub">Real-time scored</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">⚠ High Risk</div>
+          <div class="stat-value" style="color:#f87171;" id="ml-high-risk">—</div>
+          <div class="stat-sub">Score ≥ 50</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">🚫 Auto-Kicked</div>
+          <div class="stat-value" style="color:#ef4444;" id="ml-kicked-count">—</div>
+          <div class="stat-sub">Score ≥ 75 (Critical)</div>
+        </div>
+      </div>
+
+      <div class="table-section">
+        <div class="table-header">
+          <h2>Live ML Scoring — Per Session</h2>
+          <div class="table-meta">Scores computed in real-time on each behavior snapshot</div>
+        </div>
+        <div id="ml-results-container" class="ml-results-loading">
+          <div style="text-align:center;padding:2rem;color:#64748b;">
+            <svg viewBox="0 0 24 24" fill="none" style="width:32px;height:32px;margin-bottom:0.5rem;animation:spin 2s linear infinite;">
+              <circle cx="12" cy="12" r="10" stroke="rgba(100,116,139,0.3)" stroke-width="2"/>
+              <path d="M12 2a10 10 0 0110 10" stroke="#f5c518" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <div>Fetching ML analysis…</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </main>
 
   <style>
+    .row-anomaly { background: rgba(249,115,22,0.08); }
+    .dashboard-col-highlight { color: #f8fafc !important; }
+    .behavior-meta .dim-text { color: #e2e8f0; }
+    .behavior-meta .mono { color: #f8fafc; }
+    .capture-table, .capture-table thead, .capture-table tbody, .capture-table tr { background: transparent !important; }
+    .capture-table td, .capture-table th { color: #e2e8f0 !important; }
+    .capture-table th { color: #cbd5e1 !important; }
+    .ml-session-card { background: #111827 !important; }
+    .ml-score-circle.low { background: rgba(34,197,94,0.18) !important; }
+    .ml-score-circle.medium { background: rgba(234,179,8,0.18) !important; }
+    .ml-score-circle.high { background: rgba(249,115,22,0.18) !important; }
+    .ml-score-circle.critical { background: rgba(239,68,68,0.18) !important; }
+    .badge-anomaly { display:inline-block; background: rgba(249,115,22,0.12); color:#fb923c; border:1px solid rgba(249,115,22,0.3); padding:0.18rem 0.48rem; border-radius:5px; font-size:0.72rem; line-height:1.2; }
+    .alert-card { background: #111827; border: 1px solid #334155; border-radius: 14px; padding: 1rem 1.2rem; margin-bottom: 1rem; }
+    .anomaly-summary .alert-title { font-weight: 700; color: #f5c518; margin-bottom: 0.35rem; }
+    .anomaly-summary .alert-text { color:#94a3b8; margin-bottom:0.8rem; font-size:0.92rem; }
+    .anomaly-list { margin:0; padding-left:1.25rem; color:#e2e8f0; font-size:0.92rem; }
+    .anomaly-list li { margin-bottom:0.4rem; }
     .tab-nav { background: #0f172a; border-bottom: 1px solid #1e293b; display: flex; padding: 0 2rem; gap: 0; }
     .tab-btn { background: none; border: none; border-bottom: 3px solid transparent; padding: 0.85rem 1.5rem; font-size: 0.88rem; font-weight: 600; color: #64748b; cursor: pointer; font-family: inherit; transition: all .15s; }
     .tab-btn:hover { color: #94a3b8; }
@@ -430,75 +459,137 @@
       .behavior-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
-    /* ── Risk Score CSS Variables ── */
-    :root {
-      --risk-color-low: #34d399;
-      --risk-color-medium: #fbbf24;
-      --risk-color-high: #f87171;
-      --risk-color-critical: #f43f5e;
-    }
-
-    /* ── Risk badge in card header ── */
-    .risk-badge {
-      display: inline-flex; align-items: center; gap: 0.35rem;
-      font-size: 0.72rem; font-weight: 700; padding: 0.22rem 0.65rem;
-      border-radius: 6px; letter-spacing: 0.03em; white-space: nowrap;
-      cursor: default;
-    }
-    .risk-low     { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
-    .risk-medium  { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
-    .risk-high    { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.35); }
-    .risk-critical{ background: rgba(244,63,94,0.18); color: #f43f5e; border: 1px solid rgba(244,63,94,0.4); }
-    .risk-level-label { font-size: 0.65rem; opacity: 0.8; }
-    .risk-flag {
-      font-size: 0.6rem; font-weight: 800; padding: 0.1rem 0.35rem;
-      border-radius: 3px; background: rgba(255,255,255,0.1);
-      letter-spacing: 0.05em;
-    }
-
-    /* ── Risk panel inside expanded body ── */
-    .risk-panel { border-left: 3px solid; }
-    .risk-panel-low      { border-left-color: #34d399; }
-    .risk-panel-medium   { border-left-color: #fbbf24; }
-    .risk-panel-high     { border-left-color: #f87171; }
-    .risk-panel-critical { border-left-color: #f43f5e; }
-
-    .risk-score-circle {
-      display: flex; align-items: baseline; justify-content: center;
-      gap: 0.15rem; padding: 0.5rem 0.9rem; border-radius: 8px;
-      border: 2px solid; min-width: 80px;
-    }
-    .risk-circle-low      { border-color: #34d399; background: rgba(52,211,153,0.08); }
-    .risk-circle-medium   { border-color: #fbbf24; background: rgba(251,191,36,0.08); }
-    .risk-circle-high     { border-color: #f87171; background: rgba(248,113,113,0.08); }
-    .risk-circle-critical { border-color: #f43f5e; background: rgba(244,63,94,0.1); }
-    .risk-score-number { font-size: 2rem; font-weight: 800; line-height: 1; color: #f1f5f9; }
-    .risk-score-denom  { font-size: 0.75rem; color: #64748b; }
-
-    .risk-flag-lg {
-      font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.5rem;
-      border-radius: 4px; background: rgba(248,113,113,0.15); color: #f87171;
-      border: 1px solid rgba(248,113,113,0.3);
-    }
-
-    .risk-breakdown-bars { display: flex; flex-direction: column; gap: 0.45rem; }
-    .risk-bar-row { display: grid; grid-template-columns: 130px 1fr 55px; align-items: center; gap: 0.75rem; }
-    .risk-bar-label { font-size: 0.75rem; color: #64748b; }
-    .risk-bar-track { background: #1e293b; border-radius: 4px; height: 7px; overflow: hidden; }
-    .risk-bar-fill  { height: 100%; border-radius: 4px; min-width: 2px; transition: width 0.4s ease; }
-    .risk-bar-val   { font-size: 0.72rem; color: #94a3b8; text-align: right; font-family: 'JetBrains Mono', monospace; }
+    /* ML Analysis tab styles */
+    .ml-session-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; display: grid; grid-template-columns: 80px 1fr 120px 100px 100px 90px; align-items: center; gap: 1rem; transition: all 0.15s; }
+    .ml-session-card:hover { border-color: #475569; background: #1e293b; }
+    .ml-session-card.risk-critical { border-left: 3px solid #ef4444; }
+    .ml-session-card.risk-high { border-left: 3px solid #f97316; }
+    .ml-session-card.risk-medium { border-left: 3px solid #eab308; }
+    .ml-session-card.risk-low { border-left: 3px solid #22c55e; }
+    .ml-score-circle { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+    .ml-score-circle.low { background: rgba(34,197,94,0.12); color: #4ade80; border: 2px solid rgba(34,197,94,0.3); }
+    .ml-score-circle.medium { background: rgba(234,179,8,0.12); color: #facc15; border: 2px solid rgba(234,179,8,0.3); }
+    .ml-score-circle.high { background: rgba(249,115,22,0.12); color: #fb923c; border: 2px solid rgba(249,115,22,0.3); }
+    .ml-score-circle.critical { background: rgba(239,68,68,0.12); color: #f87171; border: 2px solid rgba(239,68,68,0.3); animation: critPulse 1.5s infinite; }
+    @keyframes critPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); } 50% { box-shadow: 0 0 12px 4px rgba(239,68,68,0.15); } }
+    .ml-session-info { display: flex; flex-direction: column; gap: 2px; }
+    .ml-session-sid { font-size: 0.78rem; font-family: 'JetBrains Mono', monospace; color: #94a3b8; }
+    .ml-session-page { font-size: 0.75rem; color: #64748b; }
+    .ml-session-time { font-size: 0.72rem; color: #475569; }
+    .ml-chip { font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; text-align: center; }
+    .ml-chip.human { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .ml-chip.bot { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .ml-chip.normal { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .ml-chip.anomaly { background: rgba(249,115,22,0.12); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
+    .ml-chip.kicked { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.3); font-weight: 800; }
+    .ml-chip.active { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 
   <script>
-    // Auto-refresh every 20 seconds
-    setTimeout(() => location.reload(), 20000);
+    // Persist active tab to avoid losing the ML view on periodic updates
+    // (do not auto-reload the whole page; restore user's selected tab on load)
+    const _tabNames = ['credentials','behavior','mlanalysis'];
+    function _restoreActiveTab() {
+      try {
+        const active = localStorage.getItem('dashboard.activeTab') || 'credentials';
+        const idx = _tabNames.indexOf(active);
+        const btns = document.querySelectorAll('.tab-btn');
+        const btn = btns[idx] || btns[0];
+        showTab(active, btn);
+      } catch (e) { /* ignore */ }
+    }
 
     function showTab(name, btn) {
       document.getElementById('tab-credentials').style.display = name === 'credentials' ? '' : 'none';
       document.getElementById('tab-behavior').style.display = name === 'behavior' ? '' : 'none';
+      document.getElementById('tab-mlanalysis').style.display = name === 'mlanalysis' ? '' : 'none';
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      try { localStorage.setItem('dashboard.activeTab', name); } catch(_) {}
+      if (name === 'mlanalysis') loadMLAnalysis();
     }
+
+    // ── ML Analysis loader ─────────────────────────────────────────
+    let mlLoaded = false;
+    function loadMLAnalysis() {
+      if (mlLoaded) return;
+      mlLoaded = true;
+      // Fetch ML status
+      fetch('/api/ml/status').then(r => r.json()).then(data => {
+        document.getElementById('ml-status-val').textContent = data.models_loaded ? '✓ Models Loaded' : '✗ Not Trained';
+        document.getElementById('ml-status-val').style.color = data.models_loaded ? '#4ade80' : '#f87171';
+      }).catch(() => {
+        document.getElementById('ml-status-val').textContent = '✗ Unavailable';
+        document.getElementById('ml-status-val').style.color = '#f87171';
+      });
+
+      // Fetch behavior data and score it
+      fetch('/dashboard/export/behavior').then(r => r.json()).then(sessions => {
+        const container = document.getElementById('ml-results-container');
+        if (!sessions || sessions.length === 0) {
+          container.innerHTML = '<div style="text-align:center;padding:2rem;color:#64748b;">No behavior sessions to analyze.</div>';
+          return;
+        }
+
+        // Score each session via batch API
+        fetch('/api/ml/analyze/batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(sessions),
+        }).then(r => r.json()).then(mlData => {
+          if (mlData.error) {
+            container.innerHTML = `<div style="text-align:center;padding:2rem;color:#f87171;">ML Error: ${mlData.error}</div>`;
+            return;
+          }
+
+          const results = mlData.results || [];
+          const kicked = new Set();
+          fetch('/api/session-check').catch(() => {});
+
+          // Stats
+          document.getElementById('ml-analyzed-count').textContent = results.length;
+          document.getElementById('ml-high-risk').textContent = results.filter(r => r.risk_score >= 50).length;
+          document.getElementById('ml-kicked-count').textContent = results.filter(r => r.risk_score >= 75).length;
+
+          // Render cards
+          let html = '<div style="display:flex;align-items:center;gap:1rem;padding:0.5rem 0 0.75rem;color:#64748b;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">' +
+            '<div style="width:80px;">Score</div><div style="flex:1;">Session</div><div style="width:120px;">Risk Level</div><div style="width:100px;">Bot</div><div style="width:100px;">Anomaly</div><div style="width:90px;">Status</div>' +
+          '</div>';
+
+          for (let i = 0; i < results.length; i++) {
+            const r = results[i];
+            const s = sessions[i] || {};
+            const level = r.risk_level || 'low';
+            const sid = (s.session_id || '').slice(0, 12);
+            const page = s.page || '—';
+            const ts = (s.server_timestamp || '').slice(0, 19).replace('T', ' ');
+            const isKicked = r.risk_score >= 75;
+
+            html += `<div class="ml-session-card risk-${level}">`;
+            html += `  <div class="ml-score-circle ${level}">${r.risk_score}</div>`;
+            html += `  <div class="ml-session-info">`;
+            html += `    <div class="ml-session-sid">${sid}…</div>`;
+            html += `    <div class="ml-session-page">Page: <strong style="color:#e2e8f0;">${page}</strong></div>`;
+            html += `    <div class="ml-session-time">${ts}</div>`;
+            html += `  </div>`;
+            html += `  <div><span class="ml-chip" style="background:rgba(${level==='critical'?'239,68,68':level==='high'?'249,115,22':level==='medium'?'234,179,8':'34,197,94'},0.12);color:${level==='critical'?'#f87171':level==='high'?'#fb923c':level==='medium'?'#facc15':'#4ade80'};border:1px solid rgba(${level==='critical'?'239,68,68':level==='high'?'249,115,22':level==='medium'?'234,179,8':'34,197,94'},0.3);">${level.toUpperCase()}</span></div>`;
+            html += `  <div><span class="ml-chip ${r.is_bot ? 'bot' : 'human'}">${r.is_bot ? '⚠ Bot' : '✓ Human'}</span></div>`;
+            html += `  <div><span class="ml-chip ${r.is_anomaly ? 'anomaly' : 'normal'}">${r.is_anomaly ? '⚠ Anomaly' : '✓ Normal'}</span></div>`;
+            html += `  <div><span class="ml-chip ${isKicked ? 'kicked' : 'active'}">${isKicked ? '🚫 Kicked' : '● Active'}</span></div>`;
+            html += `</div>`;
+          }
+          container.innerHTML = html;
+        }).catch(err => {
+          container.innerHTML = `<div style="text-align:center;padding:2rem;color:#f87171;">ML scoring failed: ${err.message}</div>`;
+        });
+      }).catch(err => {
+        document.getElementById('ml-results-container').innerHTML = `<div style="text-align:center;padding:2rem;color:#f87171;">Failed to load behavior data: ${err.message}</div>`;
+      });
+    }
+    
+    // Restore previously active tab on initial load
+    _restoreActiveTab();
 
     function toggleBehavior(header) {
       const body = header.nextElementSibling;
@@ -521,7 +612,8 @@
           btn.style.background = 'rgba(34,197,94,0.12)';
           btn.style.color = '#4ade80';
           btn.style.borderColor = 'rgba(34,197,94,0.3)';
-          btn.closest('.behavior-card').style.opacity = '0.55';
+          const container = btn.closest('.behavior-card') || btn.closest('tr');
+          if (container) container.style.opacity = '0.55';
         } else {
           btn.textContent = '🚫 Kick';
           btn.disabled = false;
@@ -560,6 +652,25 @@
         return `<div class="heatmap-row">${cells}</div>`;
       }).join('');
     });
+
+    const dashboardStatus = {
+      logCount: {{ logs|length }},
+      behaviorCount: {{ behavior|length }},
+    };
+
+    function pollDashboardUpdates() {
+      fetch('/api/dashboard/status')
+        .then(r => r.json())
+        .then(data => {
+          if (data.status === 'ok' &&
+              (data.log_count !== dashboardStatus.logCount || data.behavior_count !== dashboardStatus.behaviorCount)) {
+            window.location.reload();
+          }
+        })
+        .catch(() => {});
+    }
+
+    setInterval(pollDashboardUpdates, 60000);
   </script>
 </body>
 </html>
